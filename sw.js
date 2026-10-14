@@ -3,7 +3,7 @@
  * Modified 2026-10-14: scoped offline app shell. */
 'use strict';
 const PREFIX = 'tekideki-bet-tracker-';
-const CACHE = PREFIX + 'v2';
+const CACHE = PREFIX + 'v3';
 const SHELL = ['./', './index.html', './manifest.json', './favicon.ico', './apple-touch-icon.png', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './LICENSE'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
