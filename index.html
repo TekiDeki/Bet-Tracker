@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="ro">
+<!-- SPDX-License-Identifier: Apache-2.0
+Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stable values, editing, currency, statistics, SEO and PWA. -->
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -11,14 +13,36 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Tracker Pariuri">
 <meta name="format-detection" content="telephone=no">
-<link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiVHJhY2tlciBQYXJpdXJpIiwic2hvcnRfbmFtZSI6IlRyYWNrZXIiLCJkZXNjcmlwdGlvbiI6Ikp1cm5hbCBwZXJzb25hbCBkZSBwYXJpdXJpIiwic3RhcnRfdXJsIjoiLiIsInNjb3BlIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwib3JpZW50YXRpb24iOiJwb3J0cmFpdCIsImJhY2tncm91bmRfY29sb3IiOiIjZjRmNmY5IiwidGhlbWVfY29sb3IiOiIjM2I4MmY2IiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0ExTVRJZ05URXlJajQ4Y21WamRDQjNhV1IwYUQwaU5URXlJaUJvWldsbmFIUTlJalV4TWlJZ2NuZzlJamsySWlCbWFXeHNQU0lqTTJJNE1tWTJJaTgrUEhCaGRHZ2daRDBpVFRFeU9DQXpPRFJNTWpJMElESTRPR3cyTkNBek1pQTVOaTB4TWpnaUlHWnBiR3c5SW01dmJtVWlJSE4wY205clpUMGlJMlptWm1abVppSWdjM1J5YjJ0bExYZHBaSFJ3UFNJME1DSWdjM1J5YjJ0bExXeHBibVZqWVhBOUluSnZkVzVrSWlCemRISnZhMlV0YkdsdVpXcHZhVzQ5SW5KdmRXNWtJaTgrUEM5emRtYysiLCJzaXplcyI6ImFueSIsInR5cGUiOiJpbWFnZS9zdmcreG1sIiwicHVycG9zZSI6ImFueSJ9XX0=">
-<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9Ijk2IiBmaWxsPSIjM2I4MmY2Ii8+PHBhdGggZD0iTTEyOCAzODRMMjI0IDI4OGw2NCAzMiA5Ni0xMjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSI0MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="author" content="Kristian Mario Mišković (TekiDeki)">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://tekideki.github.io/Bet-Tracker/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TekiDeki">
+<meta property="og:title" content="Tracker Pariuri — Bet Tracker">
+<meta property="og:description" content="Jurnal personal de pariuri cu statistici, export JSON și stocare locală. Fără cont, fără tracking.">
+<meta property="og:url" content="https://tekideki.github.io/Bet-Tracker/">
+<meta property="og:image" content="https://tekideki.github.io/Bet-Tracker/og-image.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bet Tracker — private, local-first bet journal by TekiDeki">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bet Tracker — TekiDeki">
+<meta name="twitter:description" content="A private bet journal. No account, no tracking. Four languages and offline support.">
+<meta name="twitter:image" content="https://tekideki.github.io/Bet-Tracker/og-image.png">
+<link rel="alternate" hreflang="ro" href="https://tekideki.github.io/Bet-Tracker/?lang=ro">
+<link rel="alternate" hreflang="en" href="https://tekideki.github.io/Bet-Tracker/?lang=en">
+<link rel="alternate" hreflang="sr-Latn" href="https://tekideki.github.io/Bet-Tracker/?lang=sr-Latn">
+<link rel="alternate" hreflang="sr-Cyrl" href="https://tekideki.github.io/Bet-Tracker/?lang=sr-Cyrl">
+<link rel="alternate" hreflang="x-default" href="https://tekideki.github.io/Bet-Tracker/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Bet Tracker", "url": "https://tekideki.github.io/Bet-Tracker/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any modern browser", "inLanguage": ["ro", "en", "sr-Latn", "sr-Cyrl"], "isAccessibleForFree": true, "license": "https://www.apache.org/licenses/LICENSE-2.0", "author": {"@type": "Person", "name": "Kristian Mario Mi\u0161kovi\u0107"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}}</script>
 <style>
   :root {
     --bg: #f4f6f9;
     --card-bg: #ffffff;
     --text: #1f2937;
-    --text-muted: #6b7280;
+    --text-muted: #596579;
     --text-soft: #4b5563;
     --border: #e5e7eb;
     --border-strong: #d1d5db;
@@ -27,12 +51,12 @@
     --th-bg: #f9fafb;
     --row-hover: #f9fafb;
     --shadow: 0 1px 3px rgba(0,0,0,0.06);
-    --primary: #3b82f6;
-    --primary-hover: #2563eb;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
     --secondary: #e5e7eb;
     --secondary-text: #1f2937;
-    --danger: #ef4444;
-    --pos: #059669;
+    --danger: #dc2626;
+    --pos: #047857;
     --neg: #dc2626;
     --disclaimer-bg: #fef3c7;
     --disclaimer-border: #f59e0b;
@@ -62,11 +86,11 @@
     --th-bg: #0f172a;
     --row-hover: #334155;
     --shadow: 0 1px 3px rgba(0,0,0,0.4);
-    --primary: #3b82f6;
-    --primary-hover: #60a5fa;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
     --secondary: #334155;
     --secondary-text: #e2e8f0;
-    --danger: #ef4444;
+    --danger: #dc2626;
     --pos: #34d399;
     --neg: #f87171;
     --disclaimer-bg: #422006;
@@ -471,6 +495,17 @@
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; scroll-behavior: auto !important; }
   }
+  .cell-sub, #betTable td > div { overflow-wrap:anywhere; min-width:0; }
+  :focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+  .settings-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+  .settings-row select { width:auto; min-width:100px; }
+  .settings-row p, .app-footer { font-size:12px; color:var(--text-muted); }
+  .app-footer { text-align:center; padding:16px; }
+  .app-footer a { color:var(--text); }
+  .row-actions { display:flex; gap:6px; flex-wrap:wrap; }
+  .row-actions button { padding:6px 12px; min-height:44px; }
+  #addCard { scroll-margin-top:110px; }
+  @media(max-width:400px) { .app-header { gap:6px; padding-left:10px; padding-right:10px; } .app-header h1 { font-size:16px; } .app-header .subtitle { font-size:11px; } .header-controls { gap:4px; } .lang-select { padding:0 5px; min-width:60px; } }
 </style>
 </head>
 <body>
@@ -498,7 +533,7 @@
   <!-- FORMULAR -->
   <section class="card" id="addCard">
     <h2 data-i18n="add_bet">Adaugă pariu</h2>
-    <form id="betForm" autocomplete="off" novalidate>
+    <form id="betForm" autocomplete="off">
       <div class="grid">
         <div>
           <label for="data" data-i18n="date">Data</label>
@@ -508,21 +543,21 @@
           <label for="sport" data-i18n="sport">Sport</label>
           <select id="sport" required>
             <option value="" data-i18n="choose">— alege —</option>
-            <option data-i18n="sport_football">Fotbal</option>
-            <option data-i18n="sport_tennis">Tenis</option>
-            <option data-i18n="sport_basketball">Baschet</option>
-            <option data-i18n="sport_handball">Handbal</option>
-            <option data-i18n="sport_volleyball">Volei</option>
-            <option data-i18n="sport_other">Altul</option>
+            <option value="sport_football" data-i18n="sport_football">Fotbal</option>
+            <option value="sport_tennis" data-i18n="sport_tennis">Tenis</option>
+            <option value="sport_basketball" data-i18n="sport_basketball">Baschet</option>
+            <option value="sport_handball" data-i18n="sport_handball">Handbal</option>
+            <option value="sport_volleyball" data-i18n="sport_volleyball">Volei</option>
+            <option value="sport_other" data-i18n="sport_other">Altul</option>
           </select>
         </div>
         <div class="full">
           <label for="competitie" data-i18n="competition">Competiție</label>
-          <input type="text" id="competitie" placeholder="Liga 1, ATP..." data-i18n-placeholder="competition_placeholder">
+          <input type="text" id="competitie" maxlength="300" placeholder="Liga 1, ATP..." data-i18n-placeholder="competition_placeholder">
         </div>
         <div class="full">
           <label for="eveniment" data-i18n="event">Eveniment</label>
-          <input type="text" id="eveniment" placeholder="Steaua vs Rapid" required data-i18n-placeholder="event_placeholder">
+          <input type="text" id="eveniment" maxlength="300" placeholder="Steaua vs Rapid" required data-i18n-placeholder="event_placeholder">
         </div>
         <div>
           <label for="tip" data-i18n="bet_type">Tip pariu</label>
@@ -531,33 +566,33 @@
             <option>1</option>
             <option>X</option>
             <option>2</option>
-            <option data-i18n="over">Peste</option>
-            <option data-i18n="under">Sub</option>
-            <option data-i18n="handicap">Handicap</option>
-            <option data-i18n="other">Altul</option>
+            <option value="over" data-i18n="over">Peste</option>
+            <option value="under" data-i18n="under">Sub</option>
+            <option value="handicap" data-i18n="handicap">Handicap</option>
+            <option value="other" data-i18n="other">Altul</option>
           </select>
         </div>
         <div>
           <label for="suma" data-i18n="stake">Sumă pariată</label>
-          <input type="number" id="suma" step="0.01" min="0" inputmode="decimal" placeholder="0.00" required>
+          <input type="number" id="suma" step="0.01" min="0.01" max="1000000000" inputmode="decimal" placeholder="0.00" required>
         </div>
         <div>
           <label for="cota" data-i18n="odds">Cotă</label>
-          <input type="number" id="cota" step="0.01" min="1" inputmode="decimal" placeholder="1.00" required>
+          <input type="number" id="cota" step="0.01" min="1" max="100000" inputmode="decimal" placeholder="1.00" required>
         </div>
         <div>
           <label for="rezultat" data-i18n="result">Rezultat</label>
           <select id="rezultat" required>
             <option value="" data-i18n="choose">— alege —</option>
-            <option data-i18n="won">Câștigat</option>
-            <option data-i18n="lost">Pierdut</option>
-            <option data-i18n="void">Anulat</option>
-            <option data-i18n="pending">În așteptare</option>
+            <option value="won" data-i18n="won">Câștigat</option>
+            <option value="lost" data-i18n="lost">Pierdut</option>
+            <option value="void" data-i18n="void">Anulat</option>
+            <option value="pending" data-i18n="pending">În așteptare</option>
           </select>
         </div>
         <div class="full">
           <label for="nota" data-i18n="note">Notă (opțional)</label>
-          <textarea id="nota" rows="2" placeholder="Observații personale..." data-i18n-placeholder="note_placeholder"></textarea>
+          <textarea id="nota" maxlength="2000" rows="2" placeholder="Observații personale..." data-i18n-placeholder="note_placeholder"></textarea>
         </div>
       </div>
       <div class="actions">
@@ -570,7 +605,9 @@
   <!-- STATISTICI -->
   <section class="card">
     <h2 data-i18n="statistics">Statistici</h2>
-    <div class="stats-grid" id="statsGrid"></div>
+    <div class="settings-row"><label for="currencySelect" data-i18n="currency_setting">Monedă</label><select id="currencySelect"><option>RON</option><option>EUR</option><option>USD</option><option>RSD</option><option>GBP</option></select><p data-i18n="currency_hint">O singură monedă pentru jurnal; fără conversie valutară.</p></div>
+    <p data-i18n="roi_hint" style="font-size:12px;color:var(--text-muted);margin-bottom:12px">ROI folosește doar mizele pariurilor câștigate sau pierdute.</p>
+    <div class="stats-grid" id="statsGrid" aria-live="polite"></div>
   </section>
 
   <!-- ISTORIC -->
@@ -579,10 +616,8 @@
       <h2 data-i18n="history">Istoric pariuri</h2>
       <div class="actions" style="margin:0;">
         <button type="button" class="btn-secondary" id="exportBtn" data-i18n="export">Export JSON</button>
-        <label class="file-label">
-          <span data-i18n="import">Import JSON</span>
-          <input type="file" id="importInput" accept=".json,application/json" style="display:none;">
-        </label>
+        <button type="button" class="btn-secondary" id="importBtn" data-i18n="import">Import JSON</button>
+        <input type="file" id="importInput" accept=".json,application/json" hidden>
       </div>
     </div>
     <div class="table-wrap">
@@ -614,6 +649,8 @@
     <a class="btn-donate" href="https://paypal.me/TekiDeki" target="_blank" rel="noopener noreferrer" data-i18n="donate_button">☕ Merit o cafeluță?</a>
   </section>
 </main>
+<footer class="app-footer">© 2026 <a href="https://github.com/TekiDeki" target="_blank" rel="noopener noreferrer">TekiDeki</a> · <a href="https://github.com/TekiDeki/Bet-Tracker" target="_blank" rel="noopener noreferrer" data-i18n="source">Cod sursă</a> · <a href="./LICENSE">Apache-2.0</a></footer>
+<noscript><p style="padding:20px">JavaScript este necesar / JavaScript is required / JavaScript je potreban / JavaScript је потребан.</p></noscript>
 
 <button class="fab" id="fabAdd" title="Adaugă pariu" aria-label="Adaugă pariu">＋</button>
 
@@ -625,6 +662,12 @@
   const LANG_KEY = 'tracker_pariuri_lang';
   const $ = id => document.getElementById(id);
   let bets = [];
+  let editingId = null;
+  let storageBlocked = false;
+  const CURRENCY_KEY = 'tracker_pariuri_currency';
+  let currency = 'RON';
+  const CURRENCIES = ['RON', 'EUR', 'USD', 'RSD', 'GBP'];
+  const MAX_BETS = 10000;
 
   // ---------- Traduceri ----------
   const translations = {
@@ -922,6 +965,9 @@
     }
   };
 
+  const extraTranslations = {"ro": {"edit": "Editează", "save_edit": "Salvează modificările", "currency_setting": "Monedă", "currency_hint": "O singură monedă pentru jurnal; fără conversie valutară.", "currency_confirm": "Schimbi eticheta monedei întregului jurnal? Sumele NU sunt convertite.", "roi_hint": "ROI = profit net / mizele pariurilor câștigate sau pierdute. Fără taxe/comisioane.", "th_bankroll": "Profit cumulat", "source": "Cod sursă", "theme_toggle": "Comută tema", "load_error": "Datele locale nu pot fi citite sau sunt invalide. Nu le suprascriem. Exportă o copie înainte de recuperare.", "import_detail": "Import: {n} înregistrări noi; {d} duplicate omise. Continui?", "file_large": "Fișier prea mare (maximum 5 MB).", "read_error": "Fișierul nu poate fi citit.", "currency_mismatch": "Moneda backupului diferă de moneda jurnalului. Nu amesteca monede.", "limit_error": "Maximum 10.000 de înregistrări.", "disclaimer": "Jurnal personal, nu recomandări de pariere. Pariurile pot provoca pierderi și dependență; nu încerca să recuperezi pierderile. Datele rămân în acest browser. Exportă periodic un backup."}, "en": {"edit": "Edit", "save_edit": "Save changes", "currency_setting": "Currency", "currency_hint": "One currency per journal; no exchange-rate conversion.", "currency_confirm": "Change the currency label for the entire journal? Amounts are NOT converted.", "roi_hint": "ROI = net profit / stakes of won or lost bets. Excludes fees and taxes.", "th_bankroll": "Cumulative profit", "source": "Source code", "theme_toggle": "Toggle theme", "load_error": "Local data cannot be read or is invalid. It will not be overwritten. Export a copy before recovery.", "import_detail": "Import: {n} new records; {d} duplicates skipped. Continue?", "file_large": "File too large (maximum 5 MB).", "read_error": "Cannot read this file.", "currency_mismatch": "Backup currency differs from journal currency. Do not mix currencies.", "limit_error": "Maximum 10,000 records.", "disclaimer": "A personal journal, not betting advice. Gambling can cause losses and addiction; do not chase losses. Data stays in this browser. Export backups regularly."}, "sr-latn": {"edit": "Izmeni", "save_edit": "Sačuvaj izmene", "currency_setting": "Valuta", "currency_hint": "Jedna valuta za dnevnik; bez konverzije valuta.", "currency_confirm": "Promeniti oznaku valute za ceo dnevnik? Iznosi se NE konvertuju.", "roi_hint": "ROI = neto profit / ulozi dobijenih ili izgubljenih opklada. Bez naknada i poreza.", "th_bankroll": "Kumulativni profit", "source": "Izvorni kod", "theme_toggle": "Promeni temu", "load_error": "Lokalni podaci se ne mogu pročitati ili nisu ispravni. Neće biti prepisani. Izvezite kopiju pre oporavka.", "import_detail": "Uvoz: {n} novih zapisa; {d} duplikata preskočeno. Nastaviti?", "file_large": "Datoteka je prevelika (najviše 5 MB).", "read_error": "Datoteka se ne može pročitati.", "currency_mismatch": "Valuta rezervne kopije se razlikuje od valute dnevnika. Ne mešajte valute.", "limit_error": "Najviše 10.000 zapisa.", "disclaimer": "Lični dnevnik, ne saveti za klađenje. Kockanje može izazvati gubitke i zavisnost; ne pokušavajte da nadoknadite gubitke. Podaci ostaju u ovom pregledaču. Redovno izvozite rezervne kopije."}, "sr-cyrl": {"edit": "Измени", "save_edit": "Сачувај измене", "currency_setting": "Валута", "currency_hint": "Једна валута за дневник; без конверзије валута.", "currency_confirm": "Променити ознаку валуте за цео дневник? Износи се НЕ конвертују.", "roi_hint": "ROI = нето профит / улози добијених или изгубљених опклада. Без накнада и пореза.", "th_bankroll": "Кумулативни профит", "source": "Изворни код", "theme_toggle": "Промени тему", "load_error": "Локални подаци се не могу прочитати или нису исправни. Неће бити преписани. Извезите копију пре опоравка.", "import_detail": "Увоз: {n} нових записа; {d} дупликата прескочено. Наставити?", "file_large": "Датотека је превелика (највише 5 MB).", "read_error": "Датотека се не може прочитати.", "currency_mismatch": "Валута резервне копије се разликује од валуте дневника. Не мешајте валуте.", "limit_error": "Највише 10.000 записа.", "disclaimer": "Лични дневник, не савети за клађење. Коцкање може изазвати губитке и зависност; не покушавајте да надокнадите губитке. Подаци остају у овом прегледачу. Редовно извозите резервне копије."}};
+  Object.keys(extraTranslations).forEach(lang => Object.assign(translations[lang], extraTranslations[lang]));
+
   let currentLang = 'ro';
 
   function t(key, vars) {
@@ -931,7 +977,7 @@
         text = text.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
       });
     }
-    return text;
+    return key === 'currency' ? currency : text;
   }
 
   // ---------- Aplicare limbă ----------
@@ -957,6 +1003,11 @@
       opt.textContent = t(key);
     });
 
+    document.title = t('app_title') + ' — TekiDeki';
+    document.querySelector('meta[name="description"]').content = t('app_subtitle') + '. ' + t('currency_hint');
+    $('themeToggle').title = $('themeToggle').ariaLabel = t('theme_toggle');
+    $('fabAdd').title = $('fabAdd').ariaLabel = t('add_bet');
+    document.querySelector('#betForm button[type="submit"]').textContent = t(editingId === null ? 'add_button' : 'save_edit');
     // Actualizează statisticile și tabelul
     renderStats();
     renderTable();
@@ -970,7 +1021,9 @@
 
   function initLanguage() {
     let saved;
+    const requested = new URLSearchParams(location.search).get("lang")?.toLowerCase();
     try { saved = localStorage.getItem(LANG_KEY); } catch (e) {}
+    if (requested && translations[requested]) { applyLanguage(requested); return; }
     if (saved && translations[saved]) {
       currentLang = saved;
     } else {
@@ -1011,42 +1064,76 @@
   }
 
   // ---------- Persistență ----------
+  // Map legacy localized values to language-independent codes.
+  function canonical(value, keys) {
+    for (const key of keys) {
+      if (value === key || Object.values(translations).some(tr => tr[key] === value)) return key;
+    }
+    return null;
+  }
+  function validDate(value) {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+    const date = new Date(value + 'T12:00:00Z');
+    return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+  }
+  function normalizeBet(b, id) {
+    if (!b || typeof b !== 'object' || Array.isArray(b)) throw new Error(t('alert_invalid_format'));
+    const result = canonical(b.rezultat, ['won','lost','void','pending']);
+    const text = (v, max, required = false) => {
+      if (typeof v !== 'string' || v.length > max || (required && !v.trim())) throw new Error(t('alert_invalid_format'));
+      return v.trim();
+    };
+    const numeric = v => (typeof v === 'number' || (typeof v === 'string' && v.trim())) ? Number(v) : NaN;
+    const stake = numeric(b.suma), odd = numeric(b.cota);
+    if (!validDate(b.data) || !result || !Number.isFinite(stake) || !Number.isFinite(odd) || stake <= 0 || stake > 1e9 || odd < 1 || odd > 1e5 || Math.abs(stake * 100 - Math.round(stake * 100)) > 0.0001) throw new Error(t('alert_invalid_format'));
+    const sport = text(b.sport, 300, true), type = text(b.tip, 300, true);
+    return {id, data:b.data, sport:canonical(sport, ['sport_football','sport_tennis','sport_basketball','sport_handball','sport_volleyball','sport_other']) || sport,
+      competitie:text(b.competitie ?? '', 300), eveniment:text(b.eveniment, 300, true), tip:canonical(type,['over','under','handicap','other']) || type,
+      suma:stake, cota:odd, rezultat:result, nota:text(b.nota ?? '', 2000)};
+  }
   function load() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      bets = raw ? JSON.parse(raw) : [];
-      if (!Array.isArray(bets)) bets = [];
+      currency = localStorage.getItem(CURRENCY_KEY) || 'RON';
+      if (!CURRENCIES.includes(currency)) currency = 'RON';
+      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      if (!Array.isArray(parsed) || parsed.length > MAX_BETS) throw new Error('Invalid stored data');
+      const used = new Set(); let next = Date.now();
+      bets = parsed.map(b => {
+        let id = b?.id;
+        if (!Number.isSafeInteger(id) || id <= 0 || used.has(id)) { while (used.has(next)) next++; id = next++; }
+        used.add(id);
+        return normalizeBet(b, id);
+      });
     } catch (e) {
-      console.error('Eroare la citire:', e);
-      bets = [];
+      bets = []; storageBlocked = true;
+      alert(t('load_error'));
     }
+    $('currencySelect').value = currency;
   }
-  function save() {
+  function save(next) {
+    if (storageBlocked) { alert(t('load_error')); return false; }
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(bets));
-    } catch (e) {
-      alert(t('alert_save_error') + e.message);
-    }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      bets = next;
+      return true;
+    } catch (e) { alert(t('alert_save_error') + e.message); return false; }
   }
+  function displayValue(value) { return Object.hasOwn(translations[currentLang], value) ? translations[currentLang][value] : value; }
+  function localToday() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  }
+  function newId() { const used = new Set(bets.map(b => b.id)); let id = Date.now(); while (used.has(id)) id++; return id; }
 
   // ---------- Calcul ----------
   function calcProfit(bet) {
-    const stake = Number(bet.suma);
-    const odd = Number(bet.cota);
-    if (bet.rezultat === 'Câștigat' || bet.rezultat === 'Won' || bet.rezultat === 'Dobitak' || bet.rezultat === 'Добитак') return stake * odd - stake;
-    if (bet.rezultat === 'Pierdut' || bet.rezultat === 'Lost' || bet.rezultat === 'Gubitak' || bet.rezultat === 'Губитак') return -stake;
+    if (isWon(bet)) return Math.round((bet.suma * bet.cota - bet.suma) * 100) / 100;
+    if (isLost(bet)) return -bet.suma;
     return 0;
   }
-
-  function isWon(bet) {
-    return bet.rezultat === 'Câștigat' || bet.rezultat === 'Won' || bet.rezultat === 'Dobitak' || bet.rezultat === 'Добитак';
-  }
-  function isLost(bet) {
-    return bet.rezultat === 'Pierdut' || bet.rezultat === 'Lost' || bet.rezultat === 'Gubitak' || bet.rezultat === 'Губитак';
-  }
-  function isPending(bet) {
-    return bet.rezultat === 'În așteptare' || bet.rezultat === 'Pending' || bet.rezultat === 'Na čekanju' || bet.rezultat === 'На чекању';
-  }
+  function isWon(bet) { return bet.rezultat === 'won'; }
+  function isLost(bet) { return bet.rezultat === 'lost'; }
+  function isPending(bet) { return bet.rezultat === 'pending'; }
 
   function computeStats() {
     const total = bets.length;
@@ -1054,13 +1141,14 @@
     const pending = bets.filter(b => isPending(b)).length;
     const totalStake = bets.reduce((s, b) => s + Number(b.suma), 0);
     const profitNet = bets.reduce((s, b) => s + calcProfit(b), 0);
-    const roi = totalStake > 0 ? profitNet / totalStake : 0;
+    const settledStake = bets.filter(b => isWon(b) || isLost(b)).reduce((sum, b) => sum + b.suma, 0);
+    const roi = settledStake > 0 ? profitNet / settledStake : 0;
     const wins = bets.filter(b => isWon(b)).length;
     const winRate = settled > 0 ? wins / settled : 0;
     const avgOdd = total > 0 ? bets.reduce((s, b) => s + Number(b.cota), 0) / total : 0;
     const avgStake = total > 0 ? totalStake / total : 0;
-    const maxWin = total > 0 ? Math.max(...bets.map(calcProfit)) : 0;
-    const maxLoss = total > 0 ? Math.min(...bets.map(calcProfit)) : 0;
+    const maxWin = bets.reduce((max, b) => Math.max(max, calcProfit(b)), 0);
+    const maxLoss = bets.reduce((min, b) => Math.min(min, calcProfit(b)), 0);
     return { total, settled, pending, totalStake, profitNet, roi, winRate, avgOdd, avgStake, maxWin, maxLoss };
   }
 
@@ -1142,15 +1230,15 @@
 
       return `<tr>
         <td data-label="${t('th_date')}">${escapeHtml(b.data)}</td>
-        <td data-label="${t('th_sport')}">${escapeHtml(b.sport)}</td>
+        <td data-label="${t('th_sport')}">${escapeHtml(displayValue(b.sport))}</td>
         <td data-label="${t('th_event')}"><div>${escapeHtml(b.eveniment)}${subHtml}</div></td>
-        <td data-label="${t('th_type')}">${escapeHtml(b.tip)}</td>
+        <td data-label="${t('th_type')}">${escapeHtml(displayValue(b.tip))}</td>
         <td data-label="${t('th_stake')}">${Number(b.suma).toFixed(2)} ${cur}</td>
         <td data-label="${t('th_odds')}">${Number(b.cota).toFixed(2)}</td>
-        <td data-label="${t('th_result')}"><span class="tag ${tagClass}">${escapeHtml(b.rezultat)}</span></td>
+        <td data-label="${t('th_result')}"><span class="tag ${tagClass}">${escapeHtml(displayValue(b.rezultat))}</span></td>
         <td data-label="${t('th_profit')}" class="${profitCls}">${profit.toFixed(2)} ${cur}</td>
         <td data-label="${t('th_bankroll')}">${(cumMap[b.id] || 0).toFixed(2)} ${cur}</td>
-        <td class="row-actions"><button class="btn-danger" data-del="${b.id}">${t('delete')}</button></td>
+        <td class="row-actions"><button class="btn-secondary" data-edit="${b.id}">${t('edit')}</button><button class="btn-danger" data-del="${b.id}">${t('delete')}</button></td>
       </tr>`;
     }).join('');
   }
@@ -1159,7 +1247,7 @@
   function addBet(e) {
     e.preventDefault();
     const bet = {
-      id: Date.now(),
+      id: editingId ?? newId(),
       data: $('data').value,
       sport: $('sport').value,
       competitie: $('competitie').value.trim(),
@@ -1170,27 +1258,29 @@
       rezultat: $('rezultat').value,
       nota: $('nota').value.trim()
     };
-    if (!bet.data || !bet.eveniment || !bet.sport || !bet.tip || !bet.rezultat || isNaN(bet.suma) || isNaN(bet.cota)) {
-      alert(t('alert_fill'));
-      return;
-    }
-    bets.push(bet);
-    save();
-    renderAll();
+    let normalized;
+    try { normalized = normalizeBet(bet, bet.id); }
+    catch (err) { alert(t('alert_fill')); return; }
+    if (editingId === null && bets.length >= MAX_BETS) { alert(t('limit_error')); return; }
+    const next = editingId === null ? [...bets, normalized] : bets.map(b => b.id === editingId ? normalized : b);
+    if (!save(next)) return;
     resetForm();
+    renderAll();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function deleteBet(id) {
     if (!confirm(t('confirm_delete'))) return;
-    bets = bets.filter(b => b.id !== id);
-    save();
+    if (!save(bets.filter(b => b.id !== id))) return;
+    if (editingId === id) resetForm();
     renderAll();
   }
 
   function resetForm() {
+    editingId = null;
+    document.querySelector('#betForm button[type="submit"]').textContent = t('add_button');
     $('betForm').reset();
-    $('data').valueAsDate = new Date();
+    $('data').value = localToday();
     $('data').focus();
   }
 
@@ -1200,39 +1290,61 @@
   }
 
   // ---------- Export / Import ----------
+  function editBet(id) {
+    const bet = bets.find(b => b.id === id); if (!bet) return;
+    editingId = id;
+    for (const key of ['data','sport','competitie','eveniment','tip','suma','cota','rezultat','nota']) {
+      const el = $(key);
+      if (el.tagName === 'SELECT' && ![...el.options].some(opt => opt.value === String(bet[key]))) {
+        const option = document.createElement('option'); option.value = bet[key]; option.textContent = bet[key]; el.appendChild(option);
+      }
+      el.value = bet[key];
+    }
+    document.querySelector('#betForm button[type="submit"]').textContent = t('save_edit');
+    $('addCard').scrollIntoView({behavior:'smooth', block:'start'});
+    $('rezultat').focus({preventScroll:true});
+  }
   function exportJson() {
-    const data = JSON.stringify(bets, null, 2);
+    let data;
+    if (storageBlocked) {
+      try { data = localStorage.getItem(STORAGE_KEY); } catch(e) { alert(t('load_error')); return; }
+      if (data === null) { alert(t('load_error')); return; }
+    } else data = JSON.stringify({schemaVersion:2, currency, bets}, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    const ts = new Date().toISOString().slice(0, 10);
-    a.href = url;
-    a.download = `tracker-pariuri-backup-${ts}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    a.href = url; a.download = `bet-tracker-backup-${localToday()}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
-
+  function fingerprint(b) { const {id, ...fields} = b; return JSON.stringify(fields); }
   function importJson(file) {
+    if (storageBlocked) { alert(t('load_error')); return; }
+    if (file.size > 5 * 1024 * 1024) { alert(t('file_large')); return; }
     const reader = new FileReader();
+    reader.onerror = () => alert(t('read_error'));
     reader.onload = e => {
       try {
-        const imported = JSON.parse(e.target.result);
+        const doc = JSON.parse(e.target.result);
+        const imported = Array.isArray(doc) ? doc : doc?.schemaVersion === 2 ? doc.bets : null;
         if (!Array.isArray(imported)) throw new Error(t('alert_invalid_format'));
-        const valid = imported.filter(b => b && typeof b === 'object' && 'suma' in b && 'cota' in b);
-        if (valid.length === 0) throw new Error(t('alert_no_valid'));
-        if (!confirm(t('alert_import_confirm', { n: valid.length, m: bets.length }))) return;
-        valid.forEach(b => {
-          if (!b.id) b.id = Date.now() + Math.random();
-          bets.push(b);
-        });
-        save();
-        renderAll();
-        alert(t('alert_import_success'));
-      } catch (err) {
-        alert(t('alert_import_error') + err.message);
-      }
+        if (!Array.isArray(doc) && !CURRENCIES.includes(doc.currency)) throw new Error(t('alert_invalid_format'));
+        if (!Array.isArray(doc) && doc.currency !== currency) throw new Error(t('currency_mismatch'));
+        if (imported.length > MAX_BETS) throw new Error(t('limit_error'));
+        const seen = new Set(bets.map(fingerprint));
+        const additions = []; let nextId = newId(); let duplicates = 0; const usedIds = new Set(bets.map(b => b.id));
+        for (const item of imported) {
+          while (usedIds.has(nextId)) nextId++;
+          const b = normalizeBet(item, nextId++); usedIds.add(b.id); const key = fingerprint(b);
+          if (seen.has(key)) { duplicates++; continue; }
+          seen.add(key); additions.push(b);
+        }
+        if (bets.length + additions.length > MAX_BETS) throw new Error(t('limit_error'));
+        if (!additions.length) { alert(t('import_detail',{n:0,d:duplicates})); return; }
+        if (!confirm(t('import_detail',{n:additions.length,d:duplicates}))) return;
+        if (!save([...bets, ...additions])) return;
+        renderAll(); alert(t('alert_import_success'));
+      } catch (err) { alert(t('alert_import_error') + err.message); }
     };
     reader.readAsText(file);
   }
@@ -1240,17 +1352,24 @@
   // ---------- Init ----------
   function init() {
     initTheme();
-    load();
     initLanguage();
-    $('data').valueAsDate = new Date();
+    load();
+    $('data').value = localToday();
 
     $('betForm').addEventListener('submit', addBet);
     $('resetForm').addEventListener('click', resetForm);
     $('exportBtn').addEventListener('click', exportJson);
+    $('importBtn').addEventListener('click', () => $('importInput').click());
     $('importInput').addEventListener('change', e => {
       const f = e.target.files[0];
       if (f) importJson(f);
       e.target.value = '';
+    });
+    $('currencySelect').addEventListener('change', e => {
+      const next = e.target.value;
+      if (storageBlocked || (bets.length && !confirm(t('currency_confirm')))) { e.target.value = currency; return; }
+      try { localStorage.setItem(CURRENCY_KEY, next); currency = next; renderAll(); }
+      catch(err) { e.target.value = currency; alert(t('alert_save_error') + err.message); }
     });
     $('themeToggle').addEventListener('click', toggleTheme);
     $('langSelect').addEventListener('change', e => applyLanguage(e.target.value));
@@ -1259,6 +1378,8 @@
     $('betTableBody').addEventListener('click', e => {
       const btn = e.target.closest('button[data-del]');
       if (btn) deleteBet(Number(btn.dataset.del));
+      const edit = e.target.closest('button[data-edit]');
+      if (edit) editBet(Number(edit.dataset.edit));
     });
 
     // FAB → derulează la formular
@@ -1270,6 +1391,9 @@
     renderAll();
   }
 
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(err => console.warn('Offline registration failed:', err)));
+  }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
