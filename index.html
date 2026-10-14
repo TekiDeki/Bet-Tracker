@@ -506,6 +506,18 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
   .row-actions button { padding:6px 12px; min-height:44px; }
   #addCard { scroll-margin-top:110px; }
   @media(max-width:400px) { .app-header { gap:6px; padding-left:10px; padding-right:10px; } .app-header h1 { font-size:16px; } .app-header .subtitle { font-size:11px; } .header-controls { gap:4px; } .lang-select { padding:0 5px; min-width:60px; } }
+
+/* TekiDeki credits — shared footer, 2026-10-14. */
+.tekideki-credits {
+  display:flex; justify-content:center; align-items:center; flex-wrap:wrap;
+  gap:0 6px; padding:16px 12px; margin:0; width:100%;
+  font-family:inherit; font-size:12px; font-weight:400; line-height:1.8;
+  text-align:center; color:var(--text, var(--text-color, #1e293b));
+}
+.tekideki-credits a { color:inherit; text-decoration:underline; text-underline-offset:3px; }
+.tekideki-credits a:hover { text-decoration-thickness:2px; }
+.tekideki-credits a:focus-visible { outline:2px solid currentColor; outline-offset:4px; border-radius:2px; }
+
 </style>
 </head>
 <body>
@@ -649,7 +661,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
     <a class="btn-donate" href="https://paypal.me/TekiDeki" target="_blank" rel="noopener noreferrer" data-i18n="donate_button">☕ Merit o cafeluță?</a>
   </section>
 </main>
-<footer class="app-footer">© 2026 <a href="https://github.com/TekiDeki" target="_blank" rel="noopener noreferrer">TekiDeki</a> · <a href="https://github.com/TekiDeki/Bet-Tracker" target="_blank" rel="noopener noreferrer" data-i18n="source">Cod sursă</a> · <a href="./LICENSE">Apache-2.0</a></footer>
+<footer class="tekideki-credits" id="tekideki-credits"><span>© 2026 <a href="https://github.com/TekiDeki" target="_blank" rel="noopener noreferrer">TekiDeki</a></span><span aria-hidden="true">·</span><a id="tekideki-source" href="https://github.com/TekiDeki/Bet-Tracker" target="_blank" rel="noopener noreferrer">Source code</a><span aria-hidden="true">·</span><a href="https://tekideki.github.io/Bet-Tracker/LICENSE" target="_blank" rel="noopener noreferrer">Apache-2.0</a></footer>
 <noscript><p style="padding:20px">JavaScript este necesar / JavaScript is required / JavaScript je potreban / JavaScript је потребан.</p></noscript>
 
 <button class="fab" id="fabAdd" title="Adaugă pariu" aria-label="Adaugă pariu">＋</button>
@@ -1399,6 +1411,22 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
   } else {
     init();
   }
+})();
+</script>
+
+<script>
+/* Keep credits in sync with the application's existing language selector. */
+(function () {
+  'use strict';
+  const labels = { en:'Source code', ro:'Cod sursă', 'sr-latn':'Izvorni kod', 'sr-cyrl':'Изворни код' };
+  function updateCreditsLanguage() {
+    const lang = (document.documentElement.lang || 'en').toLowerCase();
+    const key = lang.startsWith('sr') ? (lang.includes('cyrl') ? 'sr-cyrl' : 'sr-latn') : lang.split('-')[0];
+    const link = document.getElementById('tekideki-source');
+    if (link) link.textContent = labels[key] || labels.en;
+  }
+  updateCreditsLanguage();
+  new MutationObserver(updateCreditsLanguage).observe(document.documentElement, { attributes:true, attributeFilter:['lang'] });
 })();
 </script>
 </body>
