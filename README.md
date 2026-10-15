@@ -8,12 +8,16 @@ A small, private bet journal. **No account, no tracking, no backend, no runtime 
 
 - Record date, sport, competition, event, bet type, stake, decimal odds, result and notes.
 - **Edit existing records**, including settling pending bets, or delete them with confirmation.
-- Net profit, settled-bet ROI, win rate, average odds/stake and cumulative profit.
+- **Decimal comma or dot**: `1,5` and `1.5` both mean one and a half, in the form and in imported files. Numbers are displayed in the format of the selected language.
+- Net profit, settled-bet ROI, win rate, average odds/stake, cumulative profit, settled stake, pending stake and potential profit.
 - **Română, English, Srpski (Latin), Српски (Cyrillic)**. Stable stored values and translated donation labels.
 - Light/dark themes, responsive mobile cards, accessible keyboard controls.
 - One journal currency: **RON, EUR, USD, RSD or GBP**. Language changes never change the currency. Changing currency only relabels amounts; it does **not** convert them.
-- Local browser storage and JSON export/import, with validation and duplicate detection.
-- Installable PWA and offline app shell after the first successful online visit.
+- **Field-level validation** with a message under every problem field, instead of browser alert boxes. Confirmations and results use small in-page dialogs and toasts that stay readable on phones.
+- **Recovery banner** when stored data cannot be read: the app never overwrites it, and offers a raw copy download, a retry, or a fresh start that keeps the old bytes saved in the browser.
+- Accessible history table (screen-reader caption, labelled row actions), a keyboard skip link and visible focus states.
+- Local browser storage and JSON export/import, with validation, duplicate detection and a summary of new, duplicate and invalid records before anything is merged.
+- Installable PWA and offline app shell after the first successful online visit, with app shortcuts for adding a bet and jumping to the statistics.
 - Application CSS and JavaScript live in a single `index.html`; no framework, CDN, package manager or build step is needed to use it. The accompanying files provide PWA installation, icons and metadata.
 
 ## Open or install
@@ -48,6 +52,7 @@ A valid URL language overrides the saved preference. Otherwise, the app uses the
 - **Cumulative profit:** chronological running profit, **not** an account balance or starting bankroll.
 - Taxes, commissions, cash-outs, partial wins/losses and bookmaker-specific settlement rules are not modeled. Figures may differ from the bookmaker's account.
 - Stakes must be positive, at most 1,000,000,000 and have at most two decimal places. Decimal odds must be between 1 and 100,000. Maximum 10,000 records and 5 MB per imported file. Browser storage may fill before these limits.
+- Both separators are accepted on input: a comma or a dot, with no thousands separators. Scientific notation and negative values are rejected, and grouping separators typed by hand are ignored.
 
 ## Data safety and backups
 
@@ -61,7 +66,12 @@ Legacy records have no currency metadata: **RON is the default until you choose 
 
 Imports are all-or-nothing for validation, appended rather than replacing data, and require confirmation. Records with identical normalized content are skipped as duplicates, regardless of their ID. This avoids re-importing the same backup, but also skips genuinely separate bets with identical fields. Distinguish those records with a note before importing. Backup currencies must match the journal currency. Imported IDs are regenerated to avoid collisions and unsafe markup.
 
-If stored data is invalid/unreadable, editing is blocked instead of silently overwriting it. The Export button can download the raw stored value when readable, for manual recovery. Failed writes leave the existing journal and the entered form unchanged.
+Invalid stored data is handled without losing work:
+
+- **One corrupt record** no longer blocks the journal. Valid records load normally, the broken ones are skipped, a banner says how many were ignored, and the untouched original bytes can be downloaded as a raw copy for manual recovery.
+- **Unreadable or partially written storage** opens the app with a warning banner and three choices: download the raw copy, retry reading, or start a new journal. Starting fresh keeps the previous bytes saved in the browser under a `tracker_pariuri_v1_backup_<timestamp>` key, so nothing is destroyed.
+- **Blocked storage** (private mode or strict settings) still lets you record bets for the session; a banner explains that they are lost when the tab closes and offers an immediate export.
+- Failed writes leave the existing journal and the entered form unchanged.
 
 ## Responsible use
 
@@ -69,7 +79,9 @@ Gambling can lead to financial harm and addiction. This app neither recommends b
 
 ## Verification
 
-The 2026-10-14 update was tested in Chromium using Playwright: calculations, four languages, editing, currency persistence, JSON backups, invalid inputs, escaped user content, legacy data, storage failures, offline navigation, isolated service-worker caches, direct-file mode and widths from 320 to 1280 px. Automated axe-core checks reported no tested WCAG A/AA violations in either theme across all four languages; this is not a full accessibility certification or a substitute for testing on actual devices.
+The 2026-10-15 update was tested in Chromium using Playwright against a local copy of exactly these files: 98 checks covering the statistics (including settled and pending stakes and potential profit), decimal comma and dot input, field validation, editing and deletion through the in-page dialogs, four languages with their number formats, corrupt and unreadable storage with raw-copy download and fresh start, blocked storage, JSON import (new, duplicate, invalid and mismatched-currency files), offline navigation through the service worker, escaped user content, the 390 px phone layout and the axe-core scan. Automated axe-core checks reported 0 violations in both themes. This is not a full accessibility certification or a substitute for testing on actual devices.
+
+The 2026-10-14 update was tested the same way for the previous feature set: calculations, four languages, editing, currency persistence, JSON backups, invalid inputs, escaped user content, legacy data, storage failures, offline navigation, isolated service-worker caches, direct-file mode and widths from 320 to 1280 px.
 
 ## License and support
 

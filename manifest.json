@@ -28,5 +28,47 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "./screenshots/screenshot-narrow.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Jurnal de pariuri pe telefon, cu statistici"
+    },
+    {
+      "src": "./screenshots/screenshot-wide.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Istoricul pariurilor pe desktop"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Adaugă un pariu",
+      "short_name": "Adaugă",
+      "url": "./?focus=add",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Statistici",
+      "short_name": "Statistici",
+      "url": "./?focus=stats",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
   ]
 }

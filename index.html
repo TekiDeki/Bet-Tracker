@@ -13,6 +13,30 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Tracker Pariuri">
 <meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="light dark">
+<script>
+/* Applied before the first paint: theme and language, with no flash and no
+   crash when storage is blocked. */
+(function () {
+  try {
+    var root = document.documentElement;
+    function read(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+    var theme = read('tracker_pariuri_theme');
+    if (theme !== 'dark' && theme !== 'light') {
+      theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+    root.setAttribute('data-theme', theme);
+    var meta = document.getElementById('themeColor');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f172a' : '#f4f6f9');
+    var params = new URLSearchParams(location.search);
+    var requested = (params.get('lang') || '').toLowerCase();
+    var known = ['ro', 'en', 'sr-latn', 'sr-cyrl'];
+    var lang = known.indexOf(requested) !== -1 ? requested : read('tracker_pariuri_lang');
+    if (lang === 'sr-cyrl' || lang === 'sr-latn') root.setAttribute('lang', lang === 'sr-cyrl' ? 'sr-Cyrl' : 'sr-Latn');
+    else if (lang === 'ro' || lang === 'en') root.setAttribute('lang', lang);
+  } catch (e) {}
+})();
+</script>
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
@@ -36,7 +60,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
 <link rel="alternate" hreflang="sr-Latn" href="https://tekideki.github.io/Bet-Tracker/?lang=sr-Latn">
 <link rel="alternate" hreflang="sr-Cyrl" href="https://tekideki.github.io/Bet-Tracker/?lang=sr-Cyrl">
 <link rel="alternate" hreflang="x-default" href="https://tekideki.github.io/Bet-Tracker/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Bet Tracker", "url": "https://tekideki.github.io/Bet-Tracker/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any modern browser", "inLanguage": ["ro", "en", "sr-Latn", "sr-Cyrl"], "isAccessibleForFree": true, "license": "https://www.apache.org/licenses/LICENSE-2.0", "author": {"@type": "Person", "name": "Kristian Mario Mi\u0161kovi\u0107"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Bet Tracker", "url": "https://tekideki.github.io/Bet-Tracker/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any modern browser", "inLanguage": ["ro", "en", "sr-Latn", "sr-Cyrl"], "softwareVersion": "2.0", "isAccessibleForFree": true, "featureList": ["Bet journal with statistics and cumulative profit", "Won, lost, void and pending results", "JSON export and import with duplicate detection", "Local-only storage in the browser", "Four interface languages", "Offline PWA with install support"], "license": "https://www.apache.org/licenses/LICENSE-2.0", "author": {"@type": "Person", "name": "Kristian Mario Mi\u0161kovi\u0107"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}}</script>
 <style>
   :root {
     --bg: #f4f6f9;
@@ -283,6 +307,8 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
   .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
   .actions button, .actions .file-label { flex: 1 1 auto; min-width: 140px; }
 
+  .card.editing { box-shadow: 0 0 0 2px var(--primary), var(--shadow); }
+
   /* ---------- Statistici ---------- */
   .stats-grid {
     display: grid;
@@ -335,6 +361,94 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
     white-space: nowrap;
   }
   tr:hover td { background: var(--row-hover); }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 300;
+    background: var(--primary); color: #fff; padding: 10px 16px;
+    border-radius: 0 0 8px 0; font-weight: 600; text-decoration: none;
+  }
+  .skip-link:focus { left: 0; }
+
+  .field-error {
+    color: var(--neg);
+    font-size: 12px;
+    font-weight: 600;
+    margin: 6px 0 0;
+  }
+  .field-error[hidden] { display: none; }
+  input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] {
+    border-color: var(--neg);
+    box-shadow: 0 0 0 1px var(--neg);
+  }
+
+  .status-banner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--warn-bg, #fef3c7);
+    color: var(--warn-text, #78350f);
+    border: 1px solid var(--warn-border, #fcd34d);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .status-banner[hidden] { display: none; }
+  .status-banner.danger { background: var(--danger-bg, #fee2e2); color: var(--danger-text, #7f1d1d); border-color: var(--danger-border, #fca5a5); }
+  .status-banner.info { background: var(--info-bg, #e0e7ff); color: var(--info-text, #312e81); border-color: var(--info-border, #a5b4fc); }
+  .status-text { flex: 1 1 260px; }
+  .status-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .status-actions button { min-height: 40px; }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(88px + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(12px);
+    background: var(--text, #1f2937);
+    color: var(--card-bg, #fff);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 250;
+    max-width: calc(100vw - 32px);
+    text-align: center;
+  }
+  .toast[hidden] { display: none; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .app-dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: fit-content;
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    background: var(--card-bg);
+    color: var(--text);
+    max-width: min(460px, calc(100vw - 32px));
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+  .app-dialog::backdrop { background: rgba(0,0,0,0.55); }
+  .app-dialog h2 { margin: 0 0 10px; font-size: 18px; }
+  .app-dialog p { margin: 0 0 16px; font-size: 14px; line-height: 1.55; color: var(--text-soft); }
+  .app-dialog-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+  .app-dialog-actions button { min-height: 44px; min-width: 120px; }
 
   .empty {
     text-align: center;
@@ -540,6 +654,8 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main" data-i18n="skip_to_content">Sari la conținut</a>
+
 <header class="app-header">
   <div>
     <h1 data-i18n="app_title">Tracker Pariuri</h1>
@@ -556,7 +672,12 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
   </div>
 </header>
 
-<main class="container">
+<main class="container" id="main">
+  <div class="status-banner" id="statusBanner" role="status" aria-live="polite" hidden>
+    <div class="status-text" id="statusText"></div>
+    <div class="status-actions" id="statusActions"></div>
+  </div>
+
   <div class="disclaimer" data-i18n="disclaimer">
     Doar pentru înregistrarea și analiza pariurilor tale. Nu oferă sfaturi de pariere și nu garantează rezultate. Datele sunt personale și nu sunt transmise nimănui.
   </div>
@@ -564,11 +685,12 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
   <!-- FORMULAR -->
   <section class="card" id="addCard">
     <h2 data-i18n="add_bet">Adaugă pariu</h2>
-    <form id="betForm" autocomplete="off">
+    <form id="betForm" autocomplete="off" novalidate>
       <div class="grid">
         <div>
           <label for="data" data-i18n="date">Data</label>
-          <input type="date" id="data" required>
+          <input type="date" id="data" required aria-describedby="err-data">
+          <p class="field-error" id="err-data" hidden></p>
         </div>
         <div>
           <label for="sport" data-i18n="sport">Sport</label>
@@ -581,14 +703,17 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
             <option value="sport_volleyball" data-i18n="sport_volleyball">Volei</option>
             <option value="sport_other" data-i18n="sport_other">Altul</option>
           </select>
+          <p class="field-error" id="err-sport" hidden></p>
         </div>
         <div class="full">
           <label for="competitie" data-i18n="competition">Competiție</label>
-          <input type="text" id="competitie" maxlength="300" placeholder="Liga 1, ATP..." data-i18n-placeholder="competition_placeholder">
+          <input type="text" id="competitie" maxlength="300" placeholder="Liga 1, ATP..." data-i18n-placeholder="competition_placeholder" aria-describedby="err-competitie">
+          <p class="field-error" id="err-competitie" hidden></p>
         </div>
         <div class="full">
           <label for="eveniment" data-i18n="event">Eveniment</label>
-          <input type="text" id="eveniment" maxlength="300" placeholder="Steaua vs Rapid" required data-i18n-placeholder="event_placeholder">
+          <input type="text" id="eveniment" maxlength="300" placeholder="Steaua vs Rapid" required data-i18n-placeholder="event_placeholder" aria-describedby="err-eveniment">
+          <p class="field-error" id="err-eveniment" hidden></p>
         </div>
         <div>
           <label for="tip" data-i18n="bet_type">Tip pariu</label>
@@ -602,14 +727,17 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
             <option value="handicap" data-i18n="handicap">Handicap</option>
             <option value="other" data-i18n="other">Altul</option>
           </select>
+          <p class="field-error" id="err-tip" hidden></p>
         </div>
         <div>
           <label for="suma" data-i18n="stake">Sumă pariată</label>
-          <input type="number" id="suma" step="0.01" min="0.01" max="1000000000" inputmode="decimal" placeholder="0.00" required>
+          <input type="text" id="suma" inputmode="decimal" autocomplete="off" maxlength="14" placeholder="0.00" required aria-describedby="err-suma">
+          <p class="field-error" id="err-suma" hidden></p>
         </div>
         <div>
           <label for="cota" data-i18n="odds">Cotă</label>
-          <input type="number" id="cota" step="0.01" min="1" max="100000" inputmode="decimal" placeholder="1.00" required>
+          <input type="text" id="cota" inputmode="decimal" autocomplete="off" maxlength="10" placeholder="1.00" required aria-describedby="err-cota">
+          <p class="field-error" id="err-cota" hidden></p>
         </div>
         <div>
           <label for="rezultat" data-i18n="result">Rezultat</label>
@@ -620,21 +748,24 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
             <option value="void" data-i18n="void">Anulat</option>
             <option value="pending" data-i18n="pending">În așteptare</option>
           </select>
+          <p class="field-error" id="err-rezultat" hidden></p>
         </div>
         <div class="full">
           <label for="nota" data-i18n="note">Notă (opțional)</label>
-          <textarea id="nota" maxlength="2000" rows="2" placeholder="Observații personale..." data-i18n-placeholder="note_placeholder"></textarea>
+          <textarea id="nota" maxlength="2000" rows="2" placeholder="Observații personale..." data-i18n-placeholder="note_placeholder" aria-describedby="err-nota"></textarea>
+          <p class="field-error" id="err-nota" hidden></p>
         </div>
       </div>
       <div class="actions">
         <button type="submit" class="btn-primary" data-i18n="add_button">Adaugă pariu</button>
+        <button type="button" class="btn-secondary" id="cancelEdit" data-i18n="cancel_edit" hidden>Renunță la editare</button>
         <button type="button" class="btn-secondary" id="resetForm" data-i18n="reset_button">Golește formularul</button>
       </div>
     </form>
   </section>
 
   <!-- STATISTICI -->
-  <section class="card">
+  <section class="card" id="statsCard">
     <h2 data-i18n="statistics">Statistici</h2>
     <div class="settings-row"><label for="currencySelect" data-i18n="currency_setting">Monedă</label><select id="currencySelect"><option>RON</option><option>EUR</option><option>USD</option><option>RSD</option><option>GBP</option></select><p data-i18n="currency_hint">O singură monedă pentru jurnal; fără conversie valutară.</p></div>
     <p data-i18n="roi_hint" style="font-size:12px;color:var(--text-muted);margin-bottom:12px">ROI folosește doar mizele pariurilor câștigate sau pierdute.</p>
@@ -653,6 +784,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
     </div>
     <div class="table-wrap">
       <table id="betTable">
+        <caption class="sr-only" data-i18n="table_caption">Pariurile înregistrate, cele mai recente primele</caption>
         <thead>
           <tr>
             <th data-i18n="th_date">Data</th>
@@ -664,7 +796,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
             <th data-i18n="th_result">Rezultat</th>
             <th data-i18n="th_profit">Profit</th>
             <th data-i18n="th_bankroll">Bankroll</th>
-            <th></th>
+            <th><span class="sr-only" data-i18n="th_actions">Acțiuni</span></th>
           </tr>
         </thead>
         <tbody id="betTableBody"></tbody>
@@ -689,7 +821,18 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
 <footer class="tekideki-credits" id="tekideki-credits"><span>© 2026 <a href="https://github.com/TekiDeki" target="_blank" rel="noopener noreferrer">TekiDeki</a></span><span aria-hidden="true">·</span><a id="tekideki-source" href="https://github.com/TekiDeki/Bet-Tracker" target="_blank" rel="noopener noreferrer">Source code</a><span aria-hidden="true">·</span><a href="https://tekideki.github.io/Bet-Tracker/LICENSE" target="_blank" rel="noopener noreferrer">Apache-2.0</a></footer>
 <noscript><p style="padding:20px">JavaScript este necesar / JavaScript is required / JavaScript je potreban / JavaScript је потребан.</p></noscript>
 
-<button class="fab" id="fabAdd" title="Adaugă pariu" aria-label="Adaugă pariu">＋</button>
+<button class="fab" id="fabAdd" title="Adaugă pariu" aria-label="Adaugă pariu" data-i18n-aria="add_bet">＋</button>
+
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+<dialog class="app-dialog" id="appDialog" aria-labelledby="appDialogTitle">
+  <h2 id="appDialogTitle"></h2>
+  <p id="appDialogBody"></p>
+  <div class="app-dialog-actions">
+    <button type="button" class="btn-secondary" id="appDialogCancel" data-i18n="cancel">Renunță</button>
+    <button type="button" class="btn-primary" id="appDialogConfirm" data-i18n="confirm">Continuă</button>
+  </div>
+</dialog>
 
 <script>
 (function() {
@@ -700,11 +843,65 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
   const $ = id => document.getElementById(id);
   let bets = [];
   let editingId = null;
-  let storageBlocked = false;
+  /* Storage state: 'ok' = reads and writes work, 'memory' = the browser blocks
+     storage (private mode, strict settings) so the session lives in memory,
+     'unreadable' = something is stored but cannot be parsed - it is never
+     overwritten. */
+  let dataState = 'ok';
+  let skippedRecords = 0;
+  let rawStoredData = null;
   const CURRENCY_KEY = 'tracker_pariuri_currency';
   let currency = 'RON';
   const CURRENCIES = ['RON', 'EUR', 'USD', 'RSD', 'GBP'];
   const MAX_BETS = 10000;
+  const BACKUP_PREFIX = 'tracker_pariuri_v1_backup_';
+  const LIMITS = { stakeMin: 0.01, stakeMax: 1e9, oddsMin: 1, oddsMax: 1e5, textMax: 300, noteMax: 2000 };
+
+  /* ---------- Storage sigur ---------- */
+  function storeGet(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+  function storeSet(key, value) {
+    try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
+  }
+  function storeRemove(key) {
+    try { localStorage.removeItem(key); return true; } catch (e) { return false; }
+  }
+
+  /* ---------- Numere si formatare ---------- */
+  const LOCALES = { ro: 'ro-RO', en: 'en-GB', 'sr-latn': 'sr-Latn-RS', 'sr-cyrl': 'sr-Cyrl-RS' };
+  function locale() { return LOCALES[currentLang] || 'ro-RO'; }
+
+  /* Accepts both decimal separators, ignores spaces used as grouping. */
+  function parseAmount(raw) {
+    if (raw === null || raw === undefined) return NaN;
+    const cleaned = String(raw).trim().replace(/\s+/g, '').replace(',', '.');
+    if (cleaned === '' || !/^\d+(\.\d+)?$/.test(cleaned)) return NaN;
+    return Number(cleaned);
+  }
+  function moneyFormatter() {
+    return new Intl.NumberFormat(locale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function formatMoney(value) {
+    return moneyFormatter().format(Number(value) || 0) + ' ' + currency;
+  }
+  function formatOdds(value) {
+    return new Intl.NumberFormat(locale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(value) || 0);
+  }
+  function formatPercent(value) {
+    return new Intl.NumberFormat(locale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format((Number(value) || 0) * 100) + '%';
+  }
+  function formatCount(value) {
+    return new Intl.NumberFormat(locale(), { maximumFractionDigits: 0 }).format(Number(value) || 0);
+  }
+  /* Counters pick the singular wording for exactly one item. */
+  function plural(key, count) {
+    return t(key + (Number(count) === 1 ? '_one' : '_many'), { n: formatCount(count), d: formatCount(count), b: formatCount(count) });
+  }
+  /* Value written into an input: locale separator, no grouping. */
+  function formatInput(value, digits) {
+    return new Intl.NumberFormat(locale(), { useGrouping: false, maximumFractionDigits: digits }).format(Number(value));
+  }
 
   // ---------- Traduceri ----------
   const translations = {
@@ -1002,7 +1199,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
     }
   };
 
-  const extraTranslations = {"ro": {"edit": "Editează", "save_edit": "Salvează modificările", "currency_setting": "Monedă", "currency_hint": "O singură monedă pentru jurnal; fără conversie valutară.", "currency_confirm": "Schimbi eticheta monedei întregului jurnal? Sumele NU sunt convertite.", "roi_hint": "ROI = profit net / mizele pariurilor câștigate sau pierdute. Fără taxe/comisioane.", "th_bankroll": "Profit cumulat", "source": "Cod sursă", "theme_toggle": "Comută tema", "load_error": "Datele locale nu pot fi citite sau sunt invalide. Nu le suprascriem. Exportă o copie înainte de recuperare.", "import_detail": "Import: {n} înregistrări noi; {d} duplicate omise. Continui?", "file_large": "Fișier prea mare (maximum 5 MB).", "read_error": "Fișierul nu poate fi citit.", "currency_mismatch": "Moneda backupului diferă de moneda jurnalului. Nu amesteca monede.", "limit_error": "Maximum 10.000 de înregistrări.", "disclaimer": "Jurnal personal, nu recomandări de pariere. Pariurile pot provoca pierderi și dependență; nu încerca să recuperezi pierderile. Datele rămân în acest browser. Exportă periodic un backup."}, "en": {"edit": "Edit", "save_edit": "Save changes", "currency_setting": "Currency", "currency_hint": "One currency per journal; no exchange-rate conversion.", "currency_confirm": "Change the currency label for the entire journal? Amounts are NOT converted.", "roi_hint": "ROI = net profit / stakes of won or lost bets. Excludes fees and taxes.", "th_bankroll": "Cumulative profit", "source": "Source code", "theme_toggle": "Toggle theme", "load_error": "Local data cannot be read or is invalid. It will not be overwritten. Export a copy before recovery.", "import_detail": "Import: {n} new records; {d} duplicates skipped. Continue?", "file_large": "File too large (maximum 5 MB).", "read_error": "Cannot read this file.", "currency_mismatch": "Backup currency differs from journal currency. Do not mix currencies.", "limit_error": "Maximum 10,000 records.", "disclaimer": "A personal journal, not betting advice. Gambling can cause losses and addiction; do not chase losses. Data stays in this browser. Export backups regularly."}, "sr-latn": {"edit": "Izmeni", "save_edit": "Sačuvaj izmene", "currency_setting": "Valuta", "currency_hint": "Jedna valuta za dnevnik; bez konverzije valuta.", "currency_confirm": "Promeniti oznaku valute za ceo dnevnik? Iznosi se NE konvertuju.", "roi_hint": "ROI = neto profit / ulozi dobijenih ili izgubljenih opklada. Bez naknada i poreza.", "th_bankroll": "Kumulativni profit", "source": "Izvorni kod", "theme_toggle": "Promeni temu", "load_error": "Lokalni podaci se ne mogu pročitati ili nisu ispravni. Neće biti prepisani. Izvezite kopiju pre oporavka.", "import_detail": "Uvoz: {n} novih zapisa; {d} duplikata preskočeno. Nastaviti?", "file_large": "Datoteka je prevelika (najviše 5 MB).", "read_error": "Datoteka se ne može pročitati.", "currency_mismatch": "Valuta rezervne kopije se razlikuje od valute dnevnika. Ne mešajte valute.", "limit_error": "Najviše 10.000 zapisa.", "disclaimer": "Lični dnevnik, ne saveti za klađenje. Kockanje može izazvati gubitke i zavisnost; ne pokušavajte da nadoknadite gubitke. Podaci ostaju u ovom pregledaču. Redovno izvozite rezervne kopije."}, "sr-cyrl": {"edit": "Измени", "save_edit": "Сачувај измене", "currency_setting": "Валута", "currency_hint": "Једна валута за дневник; без конверзије валута.", "currency_confirm": "Променити ознаку валуте за цео дневник? Износи се НЕ конвертују.", "roi_hint": "ROI = нето профит / улози добијених или изгубљених опклада. Без накнада и пореза.", "th_bankroll": "Кумулативни профит", "source": "Изворни код", "theme_toggle": "Промени тему", "load_error": "Локални подаци се не могу прочитати или нису исправни. Неће бити преписани. Извезите копију пре опоравка.", "import_detail": "Увоз: {n} нових записа; {d} дупликата прескочено. Наставити?", "file_large": "Датотека је превелика (највише 5 MB).", "read_error": "Датотека се не може прочитати.", "currency_mismatch": "Валута резервне копије се разликује од валуте дневника. Не мешајте валуте.", "limit_error": "Највише 10.000 записа.", "disclaimer": "Лични дневник, не савети за клађење. Коцкање може изазвати губитке и зависност; не покушавајте да надокнадите губитке. Подаци остају у овом прегледачу. Редовно извозите резервне копије."}};
+  const extraTranslations = {"ro": {"edit": "Editează", "save_edit": "Salvează modificările", "currency_setting": "Monedă", "currency_hint": "O singură monedă pentru jurnal; fără conversie valutară.", "currency_confirm": "Schimbi eticheta monedei întregului jurnal? Sumele NU sunt convertite.", "roi_hint": "ROI = profit net / mizele pariurilor câștigate sau pierdute. Fără taxe/comisioane.", "th_bankroll": "Profit cumulat", "source": "Cod sursă", "theme_toggle": "Comută tema", "load_error": "Datele locale nu pot fi citite sau sunt invalide. Nu le suprascriem. Exportă o copie înainte de recuperare.", "file_large": "Fișier prea mare (maximum 5 MB).", "read_error": "Fișierul nu poate fi citit.", "currency_mismatch": "Moneda backupului diferă de moneda jurnalului. Nu amesteca monede.", "limit_error": "Maximum 10.000 de înregistrări.", "import_bad_json": "Fișierul nu conține JSON valid.", "disclaimer": "Jurnal personal, nu recomandări de pariere. Pariurile pot provoca pierderi și dependență; nu încerca să recuperezi pierderile. Datele rămân în acest browser. Exportă periodic un backup.", "skip_to_content": "Sari la conținut", "lang_label": "Limbă", "cancel": "Renunță", "confirm": "Continuă", "cancel_edit": "Renunță la editare", "table_caption": "Pariurile înregistrate, cele mai recente primele", "th_actions": "Acțiuni", "stat_settled_stake": "Miză finalizată", "stat_pending_stake": "Miză în așteptare", "stat_potential": "Profit potențial", "err_required": "Completează acest câmp.", "err_number": "Introdu un număr valid (poți folosi virgulă: 12,50).", "err_stake_range": "Suma trebuie să fie între 0,01 și 1.000.000.000.", "err_odds_range": "Cota trebuie să fie între 1,00 și 100.000.", "err_date": "Introdu o dată validă (ZZ.LL.AAAA).", "err_too_long": "Textul este prea lung.", "err_summary": "Verifică câmpurile marcate mai sus.", "banner_memory": "Browserul blochează stocarea locală (mod privat sau setări restrictive). Poți lucra în continuare, dar pariurile se pierd la închiderea filei - exportă un backup.", "banner_unreadable": "Datele locale există, dar nu pot fi citite. Nu le suprascriem. Poți descărca o copie brută sau pornești un jurnal nou păstrând copia.", "banner_skipped": "{n} înregistrări au fost ignorate la citire (date invalide). Restul jurnalului este intact; poți descărca o copie brută.", "banner_none": "Nu există date locale salvate în acest browser.", "action_download_raw": "Descarcă copia brută", "action_start_fresh": "Pornește un jurnal nou", "action_retry": "Reîncearcă citirea", "action_export": "Exportă acum", "toast_saved": "Pariu salvat.", "toast_updated": "Pariu actualizat.", "toast_deleted": "Pariu șters.", "toast_exported": "Backup descărcat.", "toast_imported": "Import reușit: {n} înregistrări.", "toast_no_new": "Nicio înregistrare nouă: {d} duplicate omise.", "toast_fresh": "Jurnal nou pornit. Copia veche a fost păstrată în browser.", "toast_edit_cancelled": "Editare anulată.", "aria_edit_row": "Editează pariul {e} din {d}", "aria_delete_row": "Șterge pariul {e} din {d}", "confirm_delete_title": "Ștergi pariul?", "confirm_import_title": "Importă înregistrările?", "confirm_currency_title": "Schimbi moneda jurnalului?", "confirm_fresh_title": "Pornești un jurnal nou?", "start_fresh_note": "Copia datelor actuale rămâne salvată în acest browser, sub cheia de rezervă.", "backup_hint": "Backupul brut se descarcă exact așa cum este salvat, pentru recuperare manuală.", "import_intro": "Import:", "import_ask": "Continui?", "part_new_one": "{n} înregistrare nouă", "part_new_many": "{n} înregistrări noi", "part_dup_one": "{d} duplicat omis", "part_dup_many": "{d} duplicate omise", "part_bad_one": "{b} invalid ignorat", "part_bad_many": "{b} invalide ignorate", "toast_imported_one": "Import reușit: 1 înregistrare nouă.", "toast_no_new_one": "Nicio înregistrare nouă: 1 duplicat omis.", "banner_skipped_one": "1 înregistrare a fost ignorată la citire (date invalide). Restul jurnalului este intact; poți descărca o copie brută."}, "en": {"edit": "Edit", "save_edit": "Save changes", "currency_setting": "Currency", "currency_hint": "One currency per journal; no exchange-rate conversion.", "currency_confirm": "Change the currency label for the entire journal? Amounts are NOT converted.", "roi_hint": "ROI = net profit / stakes of won or lost bets. Excludes fees and taxes.", "th_bankroll": "Cumulative profit", "source": "Source code", "theme_toggle": "Toggle theme", "load_error": "Local data cannot be read or is invalid. It will not be overwritten. Export a copy before recovery.", "file_large": "File too large (maximum 5 MB).", "read_error": "Cannot read this file.", "currency_mismatch": "Backup currency differs from journal currency. Do not mix currencies.", "limit_error": "Maximum 10,000 records.", "import_bad_json": "The file does not contain valid JSON.", "disclaimer": "A personal journal, not betting advice. Gambling can cause losses and addiction; do not chase losses. Data stays in this browser. Export backups regularly.", "skip_to_content": "Skip to content", "lang_label": "Language", "cancel": "Cancel", "confirm": "Continue", "cancel_edit": "Cancel editing", "table_caption": "Recorded bets, most recent first", "th_actions": "Actions", "stat_settled_stake": "Settled stake", "stat_pending_stake": "Pending stake", "stat_potential": "Potential profit", "err_required": "Please fill in this field.", "err_number": "Enter a valid number (a comma works too: 12,50).", "err_stake_range": "The stake must be between 0.01 and 1,000,000,000.", "err_odds_range": "The odds must be between 1.00 and 100,000.", "err_date": "Enter a valid date (YYYY-MM-DD).", "err_too_long": "This text is too long.", "err_summary": "Check the fields marked above.", "banner_memory": "This browser blocks local storage (private mode or strict settings). You can keep working, but bets are lost when the tab closes - export a backup.", "banner_unreadable": "Local data exists but cannot be read. It will not be overwritten. You can download a raw copy, or start a new journal and keep the copy.", "banner_skipped": "{n} records were skipped while reading (invalid data). The rest of the journal is intact; a raw copy can be downloaded.", "banner_none": "There is no saved local data in this browser.", "action_download_raw": "Download raw copy", "action_start_fresh": "Start a new journal", "action_retry": "Try reading again", "action_export": "Export now", "toast_saved": "Bet saved.", "toast_updated": "Bet updated.", "toast_deleted": "Bet deleted.", "toast_exported": "Backup downloaded.", "toast_imported": "Import complete: {n} records.", "toast_no_new": "Nothing new to import: {d} duplicates skipped.", "toast_fresh": "New journal started. The previous copy is kept in this browser.", "toast_edit_cancelled": "Editing cancelled.", "aria_edit_row": "Edit the bet {e} from {d}", "aria_delete_row": "Delete the bet {e} from {d}", "confirm_delete_title": "Delete this bet?", "confirm_import_title": "Import these records?", "confirm_currency_title": "Change the journal currency?", "confirm_fresh_title": "Start a new journal?", "start_fresh_note": "A copy of the current data stays saved in this browser under the backup key.", "backup_hint": "The raw backup downloads exactly what is stored, for manual recovery.", "import_intro": "Import:", "import_ask": "Continue?", "part_new_one": "{n} new record", "part_new_many": "{n} new records", "part_dup_one": "{d} duplicate skipped", "part_dup_many": "{d} duplicates skipped", "part_bad_one": "{b} invalid ignored", "part_bad_many": "{b} invalid ignored", "toast_imported_one": "Import complete: 1 new record.", "toast_no_new_one": "Nothing new to import: 1 duplicate skipped.", "banner_skipped_one": "1 record was skipped while reading (invalid data). The rest of the journal is intact; a raw copy can be downloaded."}, "sr-latn": {"edit": "Izmeni", "save_edit": "Sačuvaj izmene", "currency_setting": "Valuta", "currency_hint": "Jedna valuta za dnevnik; bez konverzije valuta.", "currency_confirm": "Promeniti oznaku valute za ceo dnevnik? Iznosi se NE konvertuju.", "roi_hint": "ROI = neto profit / ulozi dobijenih ili izgubljenih opklada. Bez naknada i poreza.", "th_bankroll": "Kumulativni profit", "source": "Izvorni kod", "theme_toggle": "Promeni temu", "load_error": "Lokalni podaci se ne mogu pročitati ili nisu ispravni. Neće biti prepisani. Izvezite kopiju pre oporavka.", "file_large": "Datoteka je prevelika (najviše 5 MB).", "read_error": "Datoteka se ne može pročitati.", "currency_mismatch": "Valuta rezervne kopije se razlikuje od valute dnevnika. Ne mešajte valute.", "limit_error": "Najviše 10.000 zapisa.", "import_bad_json": "Datoteka ne sadrži ispravan JSON.", "disclaimer": "Lični dnevnik, ne saveti za klađenje. Kockanje može izazvati gubitke i zavisnost; ne pokušavajte da nadoknadite gubitke. Podaci ostaju u ovom pregledaču. Redovno izvozite rezervne kopije.", "skip_to_content": "Pređi na sadržaj", "lang_label": "Jezik", "cancel": "Otkaži", "confirm": "Nastavi", "cancel_edit": "Otkaži izmenu", "table_caption": "Evidentirane opklade, najnovije prve", "th_actions": "Radnje", "stat_settled_stake": "Završen ulog", "stat_pending_stake": "Ulog na čekanju", "stat_potential": "Potencijalni profit", "err_required": "Popunite ovo polje.", "err_number": "Unesite ispravan broj (može i zarez: 12,50).", "err_stake_range": "Ulog mora biti između 0,01 i 1.000.000.000.", "err_odds_range": "Kvota mora biti između 1,00 i 100.000.", "err_date": "Unesite ispravan datum (GGGG-MM-DD).", "err_too_long": "Tekst je predugačak.", "err_summary": "Proverite polja označena iznad.", "banner_memory": "Pregledač blokira lokalno skladištenje (privatni režim ili stroga podešavanja). Možete nastaviti, ali opklade se gube pri zatvaranju kartice - izvezite rezervnu kopiju.", "banner_unreadable": "Lokalni podaci postoje, ali se ne mogu pročitati. Nećemo ih prepisati. Možete preuzeti sirovu kopiju ili pokrenuti novi dnevnik uz zadržavanje kopije.", "banner_skipped": "{n} zapisa je preskočeno pri čitanju (neispravni podaci). Ostatak dnevnika je netaknut; sirova kopija se može preuzeti.", "banner_none": "U ovom pregledaču nema sačuvanih lokalnih podataka.", "action_download_raw": "Preuzmi sirovu kopiju", "action_start_fresh": "Pokreni novi dnevnik", "action_retry": "Pokušaj ponovo", "action_export": "Izvezi odmah", "toast_saved": "Opklada sačuvana.", "toast_updated": "Opklada izmenjena.", "toast_deleted": "Opklada obrisana.", "toast_exported": "Rezervna kopija preuzeta.", "toast_imported": "Uvoz uspešan: {n} zapisa.", "toast_no_new": "Nema novih zapisa: {d} duplikata preskočeno.", "toast_fresh": "Novi dnevnik pokrenut. Stara kopija je zadržana u pregledaču.", "toast_edit_cancelled": "Izmena otkazana.", "aria_edit_row": "Izmeni opkladu {e} od {d}", "aria_delete_row": "Obriši opkladu {e} od {d}", "confirm_delete_title": "Obrisati opkladu?", "confirm_import_title": "Uvesti zapise?", "confirm_currency_title": "Promeniti valutu dnevnika?", "confirm_fresh_title": "Pokrenuti novi dnevnik?", "start_fresh_note": "Kopija trenutnih podataka ostaje sačuvana u pregledaču pod rezervnim ključem.", "backup_hint": "Sirova rezervna kopija preuzima tačno ono što je sačuvano, za ručni oporavak.", "import_intro": "Uvoz:", "import_ask": "Nastaviti?", "part_new_one": "{n} nov zapis", "part_new_many": "{n} novih zapisa", "part_dup_one": "{d} duplikat preskočen", "part_dup_many": "{d} duplikata preskočeno", "part_bad_one": "{b} neispravan ignorisan", "part_bad_many": "{b} neispravnih ignorisano", "toast_imported_one": "Uvoz uspešan: 1 nov zapis.", "toast_no_new_one": "Nema novih zapisa: 1 duplikat preskočen.", "banner_skipped_one": "1 zapis je preskočen pri čitanju (neispravni podaci). Ostatak dnevnika je netaknut; sirova kopija se može preuzeti."}, "sr-cyrl": {"edit": "Измени", "save_edit": "Сачувај измене", "currency_setting": "Валута", "currency_hint": "Једна валута за дневник; без конверзије валута.", "currency_confirm": "Променити ознаку валуте за цео дневник? Износи се НЕ конвертују.", "roi_hint": "ROI = нето профит / улози добијених или изгубљених опклада. Без накнада и пореза.", "th_bankroll": "Кумулативни профит", "source": "Изворни код", "theme_toggle": "Промени тему", "load_error": "Локални подаци се не могу прочитати или нису исправни. Неће бити преписани. Извезите копију пре опоравка.", "file_large": "Датотека је превелика (највише 5 MB).", "read_error": "Датотека се не може прочитати.", "currency_mismatch": "Валута резервне копије се разликује од валуте дневника. Не мешајте валуте.", "limit_error": "Највише 10.000 записа.", "import_bad_json": "Датотека не садржи исправан JSON.", "disclaimer": "Лични дневник, не савети за клађење. Коцкање може изазвати губитке и зависност; не покушавајте да надокнадите губитке. Подаци остају у овом прегледачу. Редовно извозите резервне копије.", "skip_to_content": "Пређи на садржај", "lang_label": "Језик", "cancel": "Откажи", "confirm": "Настави", "cancel_edit": "Откажи измену", "table_caption": "Евидентиране опкладе, најновије прве", "th_actions": "Радње", "stat_settled_stake": "Завршен улог", "stat_pending_stake": "Улог на чекању", "stat_potential": "Потенцијални профит", "err_required": "Попуните ово поље.", "err_number": "Унесите исправан број (може и зарез: 12,50).", "err_stake_range": "Улог мора бити између 0,01 и 1.000.000.000.", "err_odds_range": "Квота мора бити између 1,00 и 100.000.", "err_date": "Унесите исправан датум (ГГГГ-ММ-ДД).", "err_too_long": "Текст је предугачак.", "err_summary": "Проверите поља означена изнад.", "banner_memory": "Прегледач блокира локално складиштење (приватни режим или строга подешавања). Можете наставити, али опкладе се губе при затварању картице - извезите резервну копију.", "banner_unreadable": "Локални подаци постоје, али се не могу прочитати. Нећемо их преписати. Можете преузети сирову копију или покренути нови дневник уз задржавање копије.", "banner_skipped": "{n} записа је прескочено при читању (неисправни подаци). Остатак дневника је нетакнут; сирова копија се може преузети.", "banner_none": "У овом прегледачу нема сачуваних локалних података.", "action_download_raw": "Преузми сирову копију", "action_start_fresh": "Покрени нови дневник", "action_retry": "Покушај поново", "action_export": "Извези одмах", "toast_saved": "Опклада сачувана.", "toast_updated": "Опклада измењена.", "toast_deleted": "Опклада обрисана.", "toast_exported": "Резервна копија преузета.", "toast_imported": "Увоз успешан: {n} записа.", "toast_no_new": "Нема нових записа: {d} дупликата прескочено.", "toast_fresh": "Нови дневник покренут. Стара копија је задржана у прегледачу.", "toast_edit_cancelled": "Измена отказана.", "aria_edit_row": "Измени опкладу {e} од {d}", "aria_delete_row": "Обриши опкладу {e} од {d}", "confirm_delete_title": "Обрисати опкладу?", "confirm_import_title": "Увести записе?", "confirm_currency_title": "Променити валюту дневника?", "confirm_fresh_title": "Покренути нови дневник?", "start_fresh_note": "Копија тренутних података остаје сачувана у прегледачу под резервним кључем.", "backup_hint": "Сирова резервна копија преузима тачно оно што је сачувано, за ручни опоравак.", "import_intro": "Увоз:", "import_ask": "Наставити?", "part_new_one": "{n} нов запис", "part_new_many": "{n} нових записа", "part_dup_one": "{d} дупликат прескочен", "part_dup_many": "{d} дупликата прескочено", "part_bad_one": "{b} неисправан игнорисан", "part_bad_many": "{b} неисправних игнорисано", "toast_imported_one": "Увоз успешан: 1 нов запис.", "toast_no_new_one": "Нема нових записа: 1 дупликат прескочен.", "banner_skipped_one": "1 запис је прескочен при читању (неисправни подаци). Остатак дневника је нетакнут; сирова копија се може преузети."}};
   Object.keys(extraTranslations).forEach(lang => Object.assign(translations[lang], extraTranslations[lang]));
 
   let currentLang = 'ro';
@@ -1034,6 +1231,11 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
       el.placeholder = t(key);
     });
 
+    // Etichete ARIA
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+      el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
+    });
+
     // Select-uri: opțiunile cu data-i18n
     document.querySelectorAll('select option[data-i18n]').forEach(opt => {
       const key = opt.getAttribute('data-i18n');
@@ -1042,12 +1244,17 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
 
     document.title = t('app_title') + ' - TekiDeki';
     document.querySelector('meta[name="description"]').content = t('app_subtitle') + '. ' + t('currency_hint');
-    $('themeToggle').title = $('themeToggle').ariaLabel = t('theme_toggle');
-    $('fabAdd').title = $('fabAdd').ariaLabel = t('add_bet');
+    $('themeToggle').setAttribute('title', t('theme_toggle'));
+    $('themeToggle').setAttribute('aria-label', t('theme_toggle'));
+    $('langSelect').setAttribute('aria-label', t('lang_label'));
+    $('fabAdd').setAttribute('title', t('add_bet'));
+    $('fabAdd').setAttribute('aria-label', t('add_bet'));
     document.querySelector('#betForm button[type="submit"]').textContent = t(editingId === null ? 'add_button' : 'save_edit');
-    // Actualizează statisticile și tabelul
+    // Actualizează statisticile, tabelul și mesajele de stare
     renderStats();
     renderTable();
+    if (typeof refreshBanner === 'function' && $('statusBanner')) refreshBanner();
+    if ($('cancelEdit')) $('cancelEdit').hidden = editingId === null;
 
     // Setează valoarea selectului
     $('langSelect').value = currentLang;
@@ -1120,7 +1327,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
       if (typeof v !== 'string' || v.length > max || (required && !v.trim())) throw new Error(t('alert_invalid_format'));
       return v.trim();
     };
-    const numeric = v => (typeof v === 'number' || (typeof v === 'string' && v.trim())) ? Number(v) : NaN;
+    const numeric = v => typeof v === 'number' ? v : (typeof v === 'string' ? parseAmount(v) : NaN);
     const stake = numeric(b.suma), odd = numeric(b.cota);
     if (!validDate(b.data) || !result || !Number.isFinite(stake) || !Number.isFinite(odd) || stake <= 0 || stake > 1e9 || odd < 1 || odd > 1e5 || Math.abs(stake * 100 - Math.round(stake * 100)) > 0.0001) throw new Error(t('alert_invalid_format'));
     const sport = text(b.sport, 300, true), type = text(b.tip, 300, true);
@@ -1128,32 +1335,126 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
       competitie:text(b.competitie ?? '', 300), eveniment:text(b.eveniment, 300, true), tip:canonical(type,['over','under','handicap','other']) || type,
       suma:stake, cota:odd, rezultat:result, nota:text(b.nota ?? '', 2000)};
   }
-  function load() {
-    try {
-      currency = localStorage.getItem(CURRENCY_KEY) || 'RON';
-      if (!CURRENCIES.includes(currency)) currency = 'RON';
-      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      if (!Array.isArray(parsed) || parsed.length > MAX_BETS) throw new Error('Invalid stored data');
-      const used = new Set(); let next = Date.now();
-      bets = parsed.map(b => {
-        let id = b?.id;
-        if (!Number.isSafeInteger(id) || id <= 0 || used.has(id)) { while (used.has(next)) next++; id = next++; }
-        used.add(id);
-        return normalizeBet(b, id);
-      });
-    } catch (e) {
-      bets = []; storageBlocked = true;
-      alert(t('load_error'));
+  function refreshBanner() {
+    if (dataState === 'memory') {
+      setBanner('', t('banner_memory'), [{ label: t('action_export'), run: exportJson }]);
+      return;
     }
-    $('currencySelect').value = currency;
+    if (dataState === 'unreadable') {
+      setBanner('danger', t('banner_unreadable'), [
+        { label: t('action_download_raw'), run: downloadRaw },
+        { label: t('action_start_fresh'), run: startFresh },
+        { label: t('action_retry'), run: () => load(true) }
+      ]);
+      return;
+    }
+    if (skippedRecords > 0) {
+      setBanner('info', skippedRecords === 1
+        ? t('banner_skipped_one')
+        : t('banner_skipped', { n: formatCount(skippedRecords) }), [{ label: t('action_download_raw'), run: downloadRaw }]);
+      return;
+    }
+    setBanner(null, '');
   }
+
+  /* Reads the journal. A single corrupt record never takes the whole journal
+     down: valid records load, the broken ones are reported and recoverable. */
+  function load(isRetry) {
+    let raw = storeGet(STORAGE_KEY);
+    // Distinguish "storage blocked" from "nothing stored yet".
+    let storageWorks = true;
+    try { localStorage.setItem('__tracker_probe__', '1'); localStorage.removeItem('__tracker_probe__'); }
+    catch (e) { storageWorks = false; }
+
+    rawStoredData = raw;
+    skippedRecords = 0;
+
+    if (raw === null || raw === '' || raw === '[]') {
+      dataState = storageWorks ? 'ok' : 'memory';
+    } else if (!storageWorks) {
+      dataState = 'memory';
+    } else {
+      let parsed = null, parseFailed = false;
+      try { parsed = JSON.parse(raw); } catch (e) { parseFailed = true; }
+      if (parseFailed || !Array.isArray(parsed) || parsed.length > MAX_BETS) {
+        dataState = 'unreadable';
+        bets = [];
+      } else {
+        const used = new Set(); let next = Date.now();
+        const kept = []; const validList = [];
+        for (const item of parsed) {
+          let id = item && item.id;
+          if (!Number.isSafeInteger(id) || id <= 0 || used.has(id)) { while (used.has(next)) next++; id = next++; }
+          used.add(id);
+          try { validList.push(normalizeBet(item, id)); } catch (e) { used.delete(id); skippedRecords++; }
+        }
+        bets = validList;
+        dataState = 'ok';
+        if (skippedRecords > 0) {
+          /* Write back only the records that are valid, so the app works again;
+             the untouched original stays available as a raw copy. */
+          storeSet(STORAGE_KEY, JSON.stringify(kept));
+          rawStoredData = raw;
+        }
+      }
+    }
+
+    currency = storeGet(CURRENCY_KEY) || 'RON';
+    if (!CURRENCIES.includes(currency)) currency = 'RON';
+    $('currencySelect').value = currency;
+    refreshBanner();
+    if (!isRetry) { renderAll(); }
+  }
+
+  /* Raw download: exactly the bytes that are stored, for manual recovery. */
+  function downloadRaw() {
+    const raw = rawStoredData !== null ? rawStoredData : storeGet(STORAGE_KEY);
+    if (raw === null) { toast(t('banner_none')); return; }
+    const blob = new Blob([raw], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bet-tracker-raw-${localToday()}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast(t('toast_exported'));
+  }
+
+  /* Moves the unreadable data aside under a backup key and starts clean.
+     Nothing is deleted: the original bytes stay in the browser. */
+  async function startFresh() {
+    const confirmed = await askConfirm(t('confirm_fresh_title'), t('start_fresh_note'), t('action_start_fresh'), true);
+    if (!confirmed) return;
+    const raw = storeGet(STORAGE_KEY);
+    if (raw !== null && raw !== '') storeSet(BACKUP_PREFIX + new Date().toISOString(), raw);
+    storeSet(STORAGE_KEY, '[]');
+    dataState = 'ok';
+    skippedRecords = 0;
+    bets = [];
+    load();
+    renderAll();
+    refreshBanner();
+    toast(t('toast_fresh'));
+  }
+
   function save(next) {
-    if (storageBlocked) { alert(t('load_error')); return false; }
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      bets = next;
-      return true;
-    } catch (e) { alert(t('alert_save_error') + e.message); return false; }
+    if (dataState === 'unreadable') {
+      toast(t('banner_unreadable'));
+      return false;
+    }
+    if (dataState !== 'memory') {
+      const okWrite = storeSet(STORAGE_KEY, JSON.stringify(next));
+      if (!okWrite) {
+        dataState = 'memory';
+        refreshBanner();
+        toast(t('banner_memory'));
+        bets = next;
+        return true;
+      }
+    }
+    // In memory mode the session still works; only the persistence is missing.
+    bets = next;
+    return true;
   }
   function displayValue(value) { return Object.hasOwn(translations[currentLang], value) ? translations[currentLang][value] : value; }
   function localToday() {
@@ -1161,6 +1462,76 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
     return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   }
   function newId() { const used = new Set(bets.map(b => b.id)); let id = Date.now(); while (used.has(id)) id++; return id; }
+
+  // ---------- Banner de stare, toast, dialog ----------
+  let bannerActions = [];
+  function setBanner(kind, text, actions) {
+    const banner = $('statusBanner');
+    const textEl = $('statusText');
+    const actionsEl = $('statusActions');
+    if (!text) { banner.hidden = true; textEl.textContent = ''; actionsEl.innerHTML = ''; bannerActions = []; return; }
+    banner.className = 'status-banner' + (kind ? ' ' + kind : '');
+    textEl.textContent = text;
+    actionsEl.innerHTML = '';
+    bannerActions = actions || [];
+    bannerActions.forEach((action, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = index === 0 ? 'btn-primary' : 'btn-secondary';
+      button.dataset.bannerAction = String(index);
+      button.textContent = action.label;
+      actionsEl.appendChild(button);
+    });
+    banner.hidden = false;
+  }
+
+  let toastTimer = null;
+  function toast(message) {
+    const el = $('toast');
+    if (!el) return;
+    el.textContent = message;
+    el.hidden = false;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      el.classList.remove('show');
+      setTimeout(() => { el.hidden = true; }, 250);
+    }, 2600);
+  }
+
+  /* Promise-based confirmation dialog, replacing window.confirm so the text
+     stays readable on mobile and the choice is keyboard accessible. */
+  function askConfirm(title, body, confirmLabel, danger) {
+    return new Promise((resolve) => {
+      const dialog = $('appDialog');
+      if (!dialog || typeof dialog.showModal !== 'function') {
+        resolve(window.confirm(title + '\n\n' + (body || '')));
+        return;
+      }
+      $('appDialogTitle').textContent = title;
+      $('appDialogBody').textContent = body || '';
+      const confirmBtn = $('appDialogConfirm');
+      const cancelBtn = $('appDialogCancel');
+      confirmBtn.textContent = confirmLabel || t('confirm');
+      confirmBtn.className = danger ? 'btn-danger' : 'btn-primary';
+      cancelBtn.textContent = t('cancel');
+      const close = (result) => {
+        dialog.removeEventListener('close', onClose);
+        confirmBtn.removeEventListener('click', onConfirm);
+        cancelBtn.removeEventListener('click', onCancel);
+        if (dialog.open) dialog.close();
+        resolve(result);
+      };
+      const onConfirm = () => close(true);
+      const onCancel = () => close(false);
+      const onClose = () => close(false);
+      confirmBtn.addEventListener('click', onConfirm);
+      cancelBtn.addEventListener('click', onCancel);
+      dialog.addEventListener('close', onClose);
+      dialog.showModal();
+      confirmBtn.focus();
+    });
+  }
 
   // ---------- Calcul ----------
   function calcProfit(bet) {
@@ -1186,25 +1557,31 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
     const avgStake = total > 0 ? totalStake / total : 0;
     const maxWin = bets.reduce((max, b) => Math.max(max, calcProfit(b)), 0);
     const maxLoss = bets.reduce((min, b) => Math.min(min, calcProfit(b)), 0);
-    return { total, settled, pending, totalStake, profitNet, roi, winRate, avgOdd, avgStake, maxWin, maxLoss };
+    const pendingStake = bets.filter(isPending).reduce((sum, b) => sum + b.suma, 0);
+    const potentialProfit = bets.filter(isPending).reduce((sum, b) => sum + (b.suma * b.cota - b.suma), 0);
+    return { total, settled, pending, totalStake, profitNet, roi, winRate, avgOdd, avgStake, maxWin, maxLoss,
+      settledStake, pendingStake, potentialProfit };
   }
 
   // ---------- Render statistici ----------
   function renderStats() {
     const s = computeStats();
-    const fmtMoney = v => v.toFixed(2) + ' ' + t('currency');
-    const fmtPct = v => (v * 100).toFixed(1) + '%';
+    const fmtMoney = v => formatMoney(v);
+    const fmtPct = v => formatPercent(v);
     const cls = v => v > 0 ? 'pos' : (v < 0 ? 'neg' : '');
 
     const items = [
-      { label: t('stat_total_bets'), value: s.total },
-      { label: t('stat_settled'), value: s.settled },
-      { label: t('stat_pending'), value: s.pending },
+      { label: t('stat_total_bets'), value: formatCount(s.total) },
+      { label: t('stat_settled'), value: formatCount(s.settled) },
+      { label: t('stat_pending'), value: formatCount(s.pending) },
       { label: t('stat_total_stake'), value: fmtMoney(s.totalStake) },
+      { label: t('stat_settled_stake'), value: fmtMoney(s.settledStake) },
+      { label: t('stat_pending_stake'), value: fmtMoney(s.pendingStake) },
       { label: t('stat_profit'), value: fmtMoney(s.profitNet), cls: cls(s.profitNet) },
+      { label: t('stat_potential'), value: fmtMoney(s.potentialProfit), cls: s.potentialProfit > 0 ? 'pos' : '' },
       { label: t('stat_roi'), value: fmtPct(s.roi), cls: cls(s.roi) },
       { label: t('stat_win_rate'), value: fmtPct(s.winRate) },
-      { label: t('stat_avg_odds'), value: s.avgOdd.toFixed(2) },
+      { label: t('stat_avg_odds'), value: formatOdds(s.avgOdd) },
       { label: t('stat_avg_stake'), value: fmtMoney(s.avgStake) },
       { label: t('stat_max_win'), value: fmtMoney(s.maxWin), cls: 'pos' },
       { label: t('stat_max_loss'), value: fmtMoney(s.maxLoss), cls: 'neg' }
@@ -1252,8 +1629,6 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
       cumMap[b.id] = cum;
     });
 
-    const cur = t('currency');
-
     tbody.innerHTML = sorted.map(b => {
       const profit = calcProfit(b);
       let tagClass = 'tag-void';
@@ -1265,60 +1640,137 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
       const sub = [b.competitie, b.nota].filter(Boolean).map(escapeHtml).join(' · ');
       const subHtml = sub ? `<div class="cell-sub">${sub}</div>` : '';
 
+      const labelEdit = t('aria_edit_row', { e: b.eveniment, d: b.data });
+      const labelDelete = t('aria_delete_row', { e: b.eveniment, d: b.data });
       return `<tr>
         <td data-label="${t('th_date')}">${escapeHtml(b.data)}</td>
         <td data-label="${t('th_sport')}">${escapeHtml(displayValue(b.sport))}</td>
         <td data-label="${t('th_event')}"><div>${escapeHtml(b.eveniment)}${subHtml}</div></td>
         <td data-label="${t('th_type')}">${escapeHtml(displayValue(b.tip))}</td>
-        <td data-label="${t('th_stake')}">${Number(b.suma).toFixed(2)} ${cur}</td>
-        <td data-label="${t('th_odds')}">${Number(b.cota).toFixed(2)}</td>
+        <td data-label="${t('th_stake')}">${formatMoney(b.suma)}</td>
+        <td data-label="${t('th_odds')}">${formatOdds(b.cota)}</td>
         <td data-label="${t('th_result')}"><span class="tag ${tagClass}">${escapeHtml(displayValue(b.rezultat))}</span></td>
-        <td data-label="${t('th_profit')}" class="${profitCls}">${profit.toFixed(2)} ${cur}</td>
-        <td data-label="${t('th_bankroll')}">${(cumMap[b.id] || 0).toFixed(2)} ${cur}</td>
-        <td class="row-actions"><button class="btn-secondary" data-edit="${b.id}">${t('edit')}</button><button class="btn-danger" data-del="${b.id}">${t('delete')}</button></td>
+        <td data-label="${t('th_profit')}" class="${profitCls}">${formatMoney(profit)}</td>
+        <td data-label="${t('th_bankroll')}">${formatMoney(cumMap[b.id] || 0)}</td>
+        <td class="row-actions"><button class="btn-secondary" data-edit="${b.id}" aria-label="${escapeHtml(labelEdit)}" title="${escapeHtml(labelEdit)}">${t('edit')}</button><button class="btn-danger" data-del="${b.id}" aria-label="${escapeHtml(labelDelete)}" title="${escapeHtml(labelDelete)}">${t('delete')}</button></td>
       </tr>`;
     }).join('');
   }
 
-  // ---------- CRUD ----------
-  function addBet(e) {
-    e.preventDefault();
-    const bet = {
-      id: editingId ?? newId(),
+  // ---------- Validare ----------
+  const FIELD_ERRORS = {
+    data: 'err-data', sport: 'err-sport', competitie: 'err-competitie',
+    eveniment: 'err-eveniment', tip: 'err-tip', suma: 'err-suma',
+    cota: 'err-cota', rezultat: 'err-rezultat', nota: 'err-nota'
+  };
+
+  function setFieldError(field, message) {
+    const hint = $(FIELD_ERRORS[field]);
+    const input = $(field);
+    if (!hint || !input) return;
+    if (message) {
+      hint.textContent = message;
+      hint.hidden = false;
+      input.setAttribute('aria-invalid', 'true');
+    } else {
+      hint.textContent = '';
+      hint.hidden = true;
+      input.removeAttribute('aria-invalid');
+    }
+  }
+
+  function clearFieldErrors() {
+    Object.keys(FIELD_ERRORS).forEach(field => setFieldError(field, null));
+  }
+
+  /* Returns { ok, values } and writes one clear message under every bad field. */
+  function validateForm() {
+    clearFieldErrors();
+    const values = {
       data: $('data').value,
       sport: $('sport').value,
       competitie: $('competitie').value.trim(),
       eveniment: $('eveniment').value.trim(),
       tip: $('tip').value,
-      suma: parseFloat($('suma').value),
-      cota: parseFloat($('cota').value),
+      suma: parseAmount($('suma').value),
+      cota: parseAmount($('cota').value),
       rezultat: $('rezultat').value,
       nota: $('nota').value.trim()
     };
+    let firstBad = null;
+    const fail = (field, message) => {
+      setFieldError(field, message);
+      if (!firstBad) firstBad = field;
+    };
+
+    if (!values.data) fail('data', t('err_required'));
+    else if (!validDate(values.data)) fail('data', t('err_date'));
+    if (!values.eveniment) fail('eveniment', t('err_required'));
+    else if (values.eveniment.length > LIMITS.textMax) fail('eveniment', t('err_too_long'));
+    if (!values.competitie) fail('competitie', t('err_required'));
+    else if (values.competitie.length > LIMITS.textMax) fail('competitie', t('err_too_long'));
+    if (!values.sport) fail('sport', t('err_required'));
+    if (!values.tip) fail('tip', t('err_required'));
+    if (!values.rezultat) fail('rezultat', t('err_required'));
+    if (!Number.isFinite(values.suma)) fail('suma', t('err_number'));
+    else if (values.suma < LIMITS.stakeMin || values.suma > LIMITS.stakeMax) fail('suma', t('err_stake_range'));
+    if (!Number.isFinite(values.cota)) fail('cota', t('err_number'));
+    else if (values.cota < LIMITS.oddsMin || values.cota > LIMITS.oddsMax) fail('cota', t('err_odds_range'));
+    if (values.nota.length > LIMITS.noteMax) fail('nota', t('err_too_long'));
+
+    if (firstBad) {
+      const el = $(firstBad);
+      if (el) el.focus();
+      return { ok: false, values };
+    }
+    return { ok: true, values };
+  }
+
+  // ---------- CRUD ----------
+  async function addBet(e) {
+    e.preventDefault();
+    const check = validateForm();
+    if (!check.ok) { toast(t('err_summary')); return; }
+    const bet = { id: editingId ?? newId(), ...check.values };
     let normalized;
     try { normalized = normalizeBet(bet, bet.id); }
-    catch (err) { alert(t('alert_fill')); return; }
-    if (editingId === null && bets.length >= MAX_BETS) { alert(t('limit_error')); return; }
+    catch (err) { toast(t('err_summary')); if (err && err.message) console.warn('Bet rejected:', err.message); return; }
+    if (editingId === null && bets.length >= MAX_BETS) { toast(t('limit_error')); return; }
+    const wasEditing = editingId !== null;
     const next = editingId === null ? [...bets, normalized] : bets.map(b => b.id === editingId ? normalized : b);
     if (!save(next)) return;
     resetForm();
     renderAll();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    toast(wasEditing ? t('toast_updated') : t('toast_saved'));
   }
 
-  function deleteBet(id) {
-    if (!confirm(t('confirm_delete'))) return;
+  async function deleteBet(id) {
+    const bet = bets.find(b => b.id === id);
+    if (!bet) return;
+    const confirmed = await askConfirm(t('confirm_delete_title'), bet.data + ' - ' + bet.eveniment, t('delete'), true);
+    if (!confirmed) return;
     if (!save(bets.filter(b => b.id !== id))) return;
     if (editingId === id) resetForm();
     renderAll();
+    toast(t('toast_deleted'));
   }
 
-  function resetForm() {
+  function cancelEdit() {
+    if (editingId === null) return;
+    resetForm();
+    toast(t('toast_edit_cancelled'));
+  }
+
+  function resetForm(keepFocus) {
     editingId = null;
     document.querySelector('#betForm button[type="submit"]').textContent = t('add_button');
+    $('cancelEdit').hidden = true;
+    $('addCard').classList.remove('editing');
     $('betForm').reset();
+    clearFieldErrors();
     $('data').value = localToday();
-    $('data').focus();
+    if (keepFocus) $('data').focus();
   }
 
   function renderAll() {
@@ -1338,63 +1790,102 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
       el.value = bet[key];
     }
     document.querySelector('#betForm button[type="submit"]').textContent = t('save_edit');
+    $('suma').value = formatInput(bet.suma, 2);
+    $('cota').value = formatInput(bet.cota, 2);
+    $('cancelEdit').hidden = false;
+    $('addCard').classList.add('editing');
+    clearFieldErrors();
     $('addCard').scrollIntoView({behavior:'smooth', block:'start'});
     $('rezultat').focus({preventScroll:true});
   }
   function exportJson() {
-    let data;
-    if (storageBlocked) {
-      try { data = localStorage.getItem(STORAGE_KEY); } catch(e) { alert(t('load_error')); return; }
-      if (data === null) { alert(t('load_error')); return; }
-    } else data = JSON.stringify({schemaVersion:2, currency, bets}, null, 2);
+    const data = JSON.stringify({schemaVersion:2, currency, bets}, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url; a.download = `bet-tracker-backup-${localToday()}.json`;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast(t('toast_exported'));
   }
   function fingerprint(b) { const {id, ...fields} = b; return JSON.stringify(fields); }
-  function importJson(file) {
-    if (storageBlocked) { alert(t('load_error')); return; }
-    if (file.size > 5 * 1024 * 1024) { alert(t('file_large')); return; }
-    const reader = new FileReader();
-    reader.onerror = () => alert(t('read_error'));
-    reader.onload = e => {
-      try {
-        const doc = JSON.parse(e.target.result);
-        const imported = Array.isArray(doc) ? doc : doc?.schemaVersion === 2 ? doc.bets : null;
-        if (!Array.isArray(imported)) throw new Error(t('alert_invalid_format'));
-        if (!Array.isArray(doc) && !CURRENCIES.includes(doc.currency)) throw new Error(t('alert_invalid_format'));
-        if (!Array.isArray(doc) && doc.currency !== currency) throw new Error(t('currency_mismatch'));
-        if (imported.length > MAX_BETS) throw new Error(t('limit_error'));
-        const seen = new Set(bets.map(fingerprint));
-        const additions = []; let nextId = newId(); let duplicates = 0; const usedIds = new Set(bets.map(b => b.id));
-        for (const item of imported) {
-          while (usedIds.has(nextId)) nextId++;
-          const b = normalizeBet(item, nextId++); usedIds.add(b.id); const key = fingerprint(b);
-          if (seen.has(key)) { duplicates++; continue; }
-          seen.add(key); additions.push(b);
-        }
-        if (bets.length + additions.length > MAX_BETS) throw new Error(t('limit_error'));
-        if (!additions.length) { alert(t('import_detail',{n:0,d:duplicates})); return; }
-        if (!confirm(t('import_detail',{n:additions.length,d:duplicates}))) return;
-        if (!save([...bets, ...additions])) return;
-        renderAll(); alert(t('alert_import_success'));
-      } catch (err) { alert(t('alert_import_error') + err.message); }
-    };
-    reader.readAsText(file);
+  /* Import never fails silently and never relays a raw parser message: the
+     reason is one clear localized sentence. */
+  async function importJson(file) {
+    if (file.size > 5 * 1024 * 1024) { toast(t('file_large')); return; }
+    if (dataState === 'unreadable') { toast(t('banner_unreadable')); return; }
+    const text = await new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onerror = () => resolve(null);
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsText(file);
+    });
+    if (text === null) { toast(t('read_error')); return; }
+
+    let doc;
+    try { doc = JSON.parse(text); }
+    catch (err) { toast(t('alert_import_error') + t('import_bad_json')); return; }
+
+    let imported;
+    try {
+      imported = Array.isArray(doc) ? doc : doc && doc.schemaVersion === 2 ? doc.bets : null;
+      if (!Array.isArray(imported)) throw new Error(t('alert_invalid_format'));
+      if (!Array.isArray(doc) && !CURRENCIES.includes(doc.currency)) throw new Error(t('alert_invalid_format'));
+      if (!Array.isArray(doc) && doc.currency !== currency) throw new Error(t('currency_mismatch'));
+      if (imported.length > MAX_BETS) throw new Error(t('limit_error'));
+    } catch (err) { toast(t('alert_import_error') + err.message); return; }
+
+    const seen = new Set(bets.map(fingerprint));
+    const additions = []; let nextId = newId(); let duplicates = 0; let broken = 0;
+    const usedIds = new Set(bets.map(b => b.id));
+    for (const item of imported) {
+      while (usedIds.has(nextId)) nextId++;
+      let b;
+      try { b = normalizeBet(item, nextId); } catch (err) { broken++; continue; }
+      nextId++; usedIds.add(b.id);
+      const key = fingerprint(b);
+      if (seen.has(key)) { duplicates++; continue; }
+      seen.add(key); additions.push(b);
+    }
+    if (bets.length + additions.length > MAX_BETS) { toast(t('limit_error')); return; }
+    if (!additions.length) {
+      toast(duplicates
+        ? (duplicates === 1 ? t('toast_no_new_one') : t('toast_no_new', { d: formatCount(duplicates) }))
+        : t('alert_invalid_format'));
+      return;
+    }
+    if (duplicates || broken) {
+      const parts = [plural('part_new', additions.length)];
+      if (duplicates) parts.push(plural('part_dup', duplicates));
+      if (broken) parts.push(plural('part_bad', broken));
+      const body = t('import_intro') + ' ' + parts.join('; ') + '. ' + t('import_ask');
+      const confirmed = await askConfirm(t('confirm_import_title'), body, t('confirm'));
+      if (!confirmed) return;
+    }
+    if (!save([...bets, ...additions])) return;
+    renderAll();
+    toast(additions.length === 1 ? t('toast_imported_one') : t('toast_imported', { n: formatCount(additions.length) }));
   }
 
   // ---------- Init ----------
   function init() {
     initTheme();
     initLanguage();
-    load();
+    load(true);
     $('data').value = localToday();
 
     $('betForm').addEventListener('submit', addBet);
-    $('resetForm').addEventListener('click', resetForm);
+    $('resetForm').addEventListener('click', () => resetForm(false));
+    $('cancelEdit').addEventListener('click', cancelEdit);
+    $('statusActions').addEventListener('click', e => {
+      const button = e.target.closest('button[data-banner-action]');
+      if (!button) return;
+      const action = bannerActions[Number(button.dataset.bannerAction)];
+      if (action) action.run();
+    });
+    ['data', 'suma', 'cota', 'eveniment', 'competitie', 'nota'].forEach(field => {
+      $(field).addEventListener('input', () => setFieldError(field, null));
+    });
     $('exportBtn').addEventListener('click', exportJson);
     $('importBtn').addEventListener('click', () => $('importInput').click());
     $('importInput').addEventListener('change', e => {
@@ -1402,11 +1893,18 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
       if (f) importJson(f);
       e.target.value = '';
     });
-    $('currencySelect').addEventListener('change', e => {
+    $('currencySelect').addEventListener('change', async e => {
       const next = e.target.value;
-      if (storageBlocked || (bets.length && !confirm(t('currency_confirm')))) { e.target.value = currency; return; }
-      try { localStorage.setItem(CURRENCY_KEY, next); currency = next; renderAll(); }
-      catch(err) { e.target.value = currency; alert(t('alert_save_error') + err.message); }
+      if (dataState === 'unreadable' || (bets.length && !(await askConfirm(t('confirm_currency_title'), t('currency_confirm'), t('confirm'))))) {
+        e.target.value = currency;
+        return;
+      }
+      currency = next;
+      if (!storeSet(CURRENCY_KEY, next) && dataState !== 'memory') {
+        dataState = 'memory';
+        refreshBanner();
+      }
+      renderAll();
     });
     $('themeToggle').addEventListener('click', toggleTheme);
     $('langSelect').addEventListener('change', e => applyLanguage(e.target.value));
@@ -1414,7 +1912,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
     // Delegare evenimente pentru ștergere
     $('betTableBody').addEventListener('click', e => {
       const btn = e.target.closest('button[data-del]');
-      if (btn) deleteBet(Number(btn.dataset.del));
+      if (btn) { deleteBet(Number(btn.dataset.del)); return; }
       const edit = e.target.closest('button[data-edit]');
       if (edit) editBet(Number(edit.dataset.edit));
     });
@@ -1426,6 +1924,15 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
     });
 
     renderAll();
+
+    /* App shortcuts (manifest): ?focus=add opens the form, ?focus=stats the numbers. */
+    const focusTarget = new URLSearchParams(location.search).get('focus');
+    if (focusTarget === 'add') {
+      $('addCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => $('eveniment').focus(), 350);
+    } else if (focusTarget === 'stats') {
+      $('statsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
