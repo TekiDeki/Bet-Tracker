@@ -6,7 +6,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Tracker Pariuri</title>
-<meta name="description" content="Jurnal personal de pariuri — datele sunt salvate local, pe dispozitivul tău.">
+<meta name="description" content="Jurnal personal de pariuri - datele sunt salvate local, pe dispozitivul tău.">
 <meta name="theme-color" content="#f4f6f9" id="themeColor">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,14 +21,14 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
 <link rel="canonical" href="https://tekideki.github.io/Bet-Tracker/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TekiDeki">
-<meta property="og:title" content="Tracker Pariuri — Bet Tracker">
+<meta property="og:title" content="Tracker Pariuri - Bet Tracker">
 <meta property="og:description" content="Jurnal personal de pariuri cu statistici, export JSON și stocare locală. Fără cont, fără tracking.">
 <meta property="og:url" content="https://tekideki.github.io/Bet-Tracker/">
 <meta property="og:image" content="https://tekideki.github.io/Bet-Tracker/og-image.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Bet Tracker — private, local-first bet journal by TekiDeki">
+<meta property="og:image:alt" content="Bet Tracker - private, local-first bet journal by TekiDeki">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Bet Tracker — TekiDeki">
+<meta name="twitter:title" content="Bet Tracker - TekiDeki">
 <meta name="twitter:description" content="A private bet journal. No account, no tracking. Four languages and offline support.">
 <meta name="twitter:image" content="https://tekideki.github.io/Bet-Tracker/og-image.png">
 <link rel="alternate" hreflang="ro" href="https://tekideki.github.io/Bet-Tracker/?lang=ro">
@@ -507,7 +507,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
   #addCard { scroll-margin-top:110px; }
   @media(max-width:400px) { .app-header { gap:6px; padding-left:10px; padding-right:10px; } .app-header h1 { font-size:16px; } .app-header .subtitle { font-size:11px; } .header-controls { gap:4px; } .lang-select { padding:0 5px; min-width:60px; } }
 
-/* TekiDeki credits — shared footer, 2026-10-14. */
+/* TekiDeki credits - shared footer, 2026-10-14. */
 .tekideki-credits {
   display:flex; justify-content:center; align-items:center; flex-wrap:wrap;
   gap:0 6px; padding:16px 12px; margin:0; width:100%;
@@ -543,7 +543,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
 <header class="app-header">
   <div>
     <h1 data-i18n="app_title">Tracker Pariuri</h1>
-    <p class="subtitle" data-i18n="app_subtitle">Jurnalul tău personal — date salvate local</p>
+    <p class="subtitle" data-i18n="app_subtitle">Jurnalul tău personal - date salvate local</p>
   </div>
   <div class="header-controls">
     <select class="lang-select" id="langSelect" aria-label="Language">
@@ -573,7 +573,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
         <div>
           <label for="sport" data-i18n="sport">Sport</label>
           <select id="sport" required>
-            <option value="" data-i18n="choose">— alege —</option>
+            <option value="" data-i18n="choose">- alege -</option>
             <option value="sport_football" data-i18n="sport_football">Fotbal</option>
             <option value="sport_tennis" data-i18n="sport_tennis">Tenis</option>
             <option value="sport_basketball" data-i18n="sport_basketball">Baschet</option>
@@ -593,7 +593,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
         <div>
           <label for="tip" data-i18n="bet_type">Tip pariu</label>
           <select id="tip" required>
-            <option value="" data-i18n="choose">— alege —</option>
+            <option value="" data-i18n="choose">- alege -</option>
             <option>1</option>
             <option>X</option>
             <option>2</option>
@@ -614,7 +614,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
         <div>
           <label for="rezultat" data-i18n="result">Rezultat</label>
           <select id="rezultat" required>
-            <option value="" data-i18n="choose">— alege —</option>
+            <option value="" data-i18n="choose">- alege -</option>
             <option value="won" data-i18n="won">Câștigat</option>
             <option value="lost" data-i18n="lost">Pierdut</option>
             <option value="void" data-i18n="void">Anulat</option>
@@ -710,12 +710,12 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
   const translations = {
     ro: {
       app_title: 'Tracker Pariuri',
-      app_subtitle: 'Jurnalul tău personal — date salvate local',
+      app_subtitle: 'Jurnalul tău personal - date salvate local',
       disclaimer: 'Doar pentru înregistrarea și analiza pariurilor tale. Nu oferă sfaturi de pariere și nu garantează rezultate. Datele sunt personale și nu sunt transmise nimănui.',
       add_bet: 'Adaugă pariu',
       date: 'Data',
       sport: 'Sport',
-      choose: '— alege —',
+      choose: '- alege -',
       sport_football: 'Fotbal',
       sport_tennis: 'Tenis',
       sport_basketball: 'Baschet',
@@ -783,12 +783,12 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
     },
     en: {
       app_title: 'Bet Tracker',
-      app_subtitle: 'Your personal journal — data saved locally',
+      app_subtitle: 'Your personal journal - data saved locally',
       disclaimer: 'Only for recording and analyzing your bets. Does not provide betting advice and does not guarantee results. Data is personal and is not transmitted to anyone.',
       add_bet: 'Add bet',
       date: 'Date',
       sport: 'Sport',
-      choose: '— choose —',
+      choose: '- choose -',
       sport_football: 'Football',
       sport_tennis: 'Tennis',
       sport_basketball: 'Basketball',
@@ -856,12 +856,12 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
     },
     'sr-latn': {
       app_title: 'Praćenje opklada',
-      app_subtitle: 'Vaš lični dnevnik — podaci se čuvaju lokalno',
+      app_subtitle: 'Vaš lični dnevnik - podaci se čuvaju lokalno',
       disclaimer: 'Samo za evidentiranje i analizu vaših opklada. Ne pruža savete za klađenje i ne garantuje rezultate. Podaci su lični i ne prenose se nikome.',
       add_bet: 'Dodaj opkladu',
       date: 'Datum',
       sport: 'Sport',
-      choose: '— izaberi —',
+      choose: '- izaberi -',
       sport_football: 'Fudbal',
       sport_tennis: 'Tenis',
       sport_basketball: 'Košarka',
@@ -929,12 +929,12 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
     },
     'sr-cyrl': {
       app_title: 'Праћење опклада',
-      app_subtitle: 'Ваш лични дневник — подаци се чувају локално',
+      app_subtitle: 'Ваш лични дневник - подаци се чувају локално',
       disclaimer: 'Само за евидентирање и анализу ваших опклада. Не пружа савете за клађење и не гарантује резултате. Подаци су лични и не преносе се никоме.',
       add_bet: 'Додај опкладу',
       date: 'Датум',
       sport: 'Спорт',
-      choose: '— изабери —',
+      choose: '- изабери -',
       sport_football: 'Фудбал',
       sport_tennis: 'Тенис',
       sport_basketball: 'Кошарка',
@@ -1040,7 +1040,7 @@ Copyright 2026 Kristian Mario Mišković. Modified 2026-10-14: validation, stabl
       opt.textContent = t(key);
     });
 
-    document.title = t('app_title') + ' — TekiDeki';
+    document.title = t('app_title') + ' - TekiDeki';
     document.querySelector('meta[name="description"]').content = t('app_subtitle') + '. ' + t('currency_hint');
     $('themeToggle').title = $('themeToggle').ariaLabel = t('theme_toggle');
     $('fabAdd').title = $('fabAdd').ariaLabel = t('add_bet');
