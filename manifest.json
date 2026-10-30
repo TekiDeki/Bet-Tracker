@@ -3,12 +3,12 @@
   "name": "Bet Tracker · TekiDeki",
   "short_name": "Bet Tracker",
   "description": "Private local-first bet journal with statistics and JSON backups.",
-  "lang": "ro",
+  "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f4f6f9",
-  "theme_color": "#3b82f6",
+  "theme_color": "#f4f6f9",
   "icons": [
     {
       "src": "./icon-192.png",
